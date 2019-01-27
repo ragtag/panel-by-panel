@@ -1,10 +1,9 @@
-// Adjust the speed of animatons.
+// Set the speed of animatons.
 var speed = 2000;
 
-var w = 100;
-var h = 100;
+var w = 0;
+var h = 0;
 
-var page = {};
 var panels = [];
 var pos = 0;
 
@@ -22,43 +21,30 @@ var menuvis = true
 window.onload = function() {
     init();
     readSVG();
-
     // TODO! Hacky way to get around incorrect position on first run.
     oldspeed = speed;
     speed = 1;
-    focus(pos);
-    focus(pos);
+    focus();
+    focus();
     speed = oldspeed
 
     assignButtons();
 }
 
+window.onresize = function() {
+    focus();
+}
+
 function init() {   
-    w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    
+    getSize();
     img = document.getElementById('page');
 
-    page = { w: w, h: h };
-
-    var panel = {
-	id: 'AAAAA',
-	ratio: img.clientWidth / img.clientHeight,
-	scalex: 1.0,
-	scaley: 1.0,
-	x: '-50%',
-	y: '-50%'
-    }
-    panels.push(panel)
     pos = 0;
 }
 
 function getSize() {
     w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    page.ratiowidth = img.clientWidth / page.svgwidth;
-    page.ratioheight =  img.clientHeight / page.svgheight;
-    console.log(page);
 }
 
 function assignButtons() {
@@ -127,19 +113,31 @@ function readSVG() {
 	    parseSVG(this);
 	}
     };
-    xmlhttp.open("GET", "./images/the-pillow-method-1.svg", true);
+    xmlhttp.open("GET", "./images/the-pillow-method-1.svg", false);
     xmlhttp.send();
 }
 
 function parseSVG(xml) {
-    page = {};
     var x, i, xmlDoc, txt;
     xmlDoc = xml.responseXML;
     svg = xmlDoc.getElementsByTagName('svg');
-    page.svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
-    page.svgheight = parseFloat(svg[0].getAttribute('height').replace(/[^0-9.]/g,''));
+    svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
+    svgheight = parseFloat(svg[0].getAttribute('height').replace(/[^0-9.]/g,''));
     getSize();
     rect = xmlDoc.getElementsByTagName("rect");
+
+    // Create the page as panel 0
+    width = (img.clientWidth / svgwidth) * svgwidth;
+    height = (img.clientHeight / svgheight) * svgheight;
+    var panel = {
+	id: 'AAAAA',
+	width: width,
+	height: height,
+	ratio: width / height,
+	x: '-50%',
+	y: '-50%'
+    }
+    panels.push(panel)
 
     for (i = 0; i<rect.length; i++) {
 	panel = {};
@@ -147,21 +145,21 @@ function parseSVG(xml) {
 	
 	// Get scale values
 	height = parseFloat(rect[i].getAttribute('height'));
-	panel.scaley = h / (page.ratioheight * height);
+	panel.height = (img.clientHeight / svgheight) * height;
 	width = parseFloat(rect[i].getAttribute('width'));
-	panel.scalex = w / (page.ratiowidth * width);
+	panel.width = (img.clientWidth / svgwidth) * width;
 	panel.ratio = width / height;
 
 	// Center of panel
 	x = parseFloat(rect[i].getAttribute('width')) / 2 + parseFloat(rect[i].getAttribute('x'));
 	// Center as percentage of page
-	x = (x / page.svgwidth * 100) * (-1);
+	x = (x / svgwidth * 100) * (-1);
 	panel.x = x + '%';
 
 	// Center of panel
 	y = parseFloat(rect[i].getAttribute('height')) / 2 + parseFloat(rect[i].getAttribute('y'));
 	// Center as percentage of page
-	y = y / page.svgheight * 100 * (-1);
+	y = y / svgheight * 100 * (-1);
 	panel.y = y + '%';
 
 	panels.push(panel)
@@ -173,21 +171,22 @@ function parseSVG(xml) {
 
 // NAVIGATION
 
-function focus(p) {
-    console.log("FOCUS")
+function focus() {
+    getSize();
     var scale = 1.0;
     var viewratio = (w / h);
-    if (panels[p].ratio >= (w / h)) {
-	scale = panels[p].scalex;
+    console.log(panels[pos])
+    if (panels[pos].ratio >= (w / h)) {
+	scale = w / panels[pos].width;
     } else {
-	scale = panels[p].scaley;
+	scale = h / panels[pos].height;
     }
     anime({
 	targets: ".page",
-	transformOrigin: panels[p].x + ' ' + panels[p].y,
+	transformOrigin: panels[pos].x + ' ' + panels[pos].y,
 	scale: scale,
-	translateX: panels[p].x,
-	translateY: panels[p].y,
+	translateX: panels[pos].x,
+	translateY: panels[pos].y,
 	duration: speed,
 	easing: 'easeOutExpo',
 	loop: false,
@@ -196,23 +195,21 @@ function focus(p) {
 
 function nextPanel() {
     menuHide();
-    getSize();
     pos++;
     if (pos >= panels.length) {
 	// TODO! Go to next page
 	pos = 0;
     }
-    focus(pos);
+    focus();
 }
 
 function prevPanel() {
     menuHide();
-    getSize();
     pos--;
     if (pos < 0) {
 	// TODO! Go to previous page
 	pos = panels.length -1;
     }
-    focus(pos);
+    focus();
 }
 
