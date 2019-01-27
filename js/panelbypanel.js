@@ -130,7 +130,7 @@ function parseSVG(xml) {
     width = (img.clientWidth / svgwidth) * svgwidth;
     height = (img.clientHeight / svgheight) * svgheight;
     var panel = {
-	id: 'AAAAA',
+	id: '  the_page',
 	width: width,
 	height: height,
 	ratio: width / height,
