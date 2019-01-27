@@ -1,12 +1,13 @@
+// Adjust the speed of animatons.
 var speed = 2000;
 
 var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-var page = {};
+var page = { w: w, h: h };
 var panels = [];
-var pos = -1;
-var panel = { scale: 1.0, x: 0.0, y: 0.0 }
+var pos = 0;
+var panel = { id: 'aaaaa', scalex: 1.0, scaley: 1.0, x: '-50%', y: '-50%' }
 
 var img = document.getElementById('page');
 var prev = document.getElementById('prevbtn');
@@ -51,7 +52,7 @@ function menuToggle() {
 // SVG Parsing
 
 function init() {
-    readSVG()
+    readSVG();
 }
 
 function sortPanels(a,b) {
@@ -81,21 +82,40 @@ function parseSVG(xml) {
     svg = xmlDoc.getElementsByTagName('svg');
     page.svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
     page.svgheight = parseFloat(svg[0].getAttribute('height').replace(/[^0-9.]/g,''));
+    getSize();
     console.log(page);
     rect = xmlDoc.getElementsByTagName("rect");
+
+    var panel = { id: 'aaaaa', scalex: 1.0, scaley: 1.0, x: '-50%', y: '-50%' }
+    panels.push(panel)
     for (i = 0; i<rect.length; i++) {
-	var panel = {}
+	panel = {};
 	panel.id = rect[i].getAttribute('id');
-	panel.x = parseFloat(rect[i].getAttribute('x'));
-	panel.y = parseFloat(rect[i].getAttribute('y'));
-	panel.height = parseFloat(rect[i].getAttribute('height'));
-	panel.width = parseFloat(rect[i].getAttribute('width'));
+	
+	// Get scale values
+	height = parseFloat(rect[i].getAttribute('height'));
+	panel.scaley = h / (page.ratioheight * height);
+	width = parseFloat(rect[i].getAttribute('width'));
+	panel.scalex = w / (page.ratiowidth * width);
+	panel.ratio = width / height;
+
+	// Center of panel
+	x = parseFloat(rect[i].getAttribute('width')) / 2 + parseFloat(rect[i].getAttribute('x'));
+	// Center as percentage of page
+	x = (x / page.svgwidth * 100) * (-1);
+	panel.x = x + '%';
+
+	// Center of panel
+	y = parseFloat(rect[i].getAttribute('height')) / 2 + parseFloat(rect[i].getAttribute('y'));
+	// Center as percentage of page
+	y = y / page.svgheight * 100 * (-1);
+	panel.y = y + '%';
+
 	panels.push(panel)
     }
     panels.sort(sortPanels)
     console.log(panels);
 }
-
 
 
 // NAVIGATION
@@ -110,14 +130,24 @@ function getSize() {
     console.log(page);
 }
 
-function focus() {
-    console.log(panel)
-    var zoomout = anime({
+function focus(p) {
+    console.log(panels[p]);
+    var scale = 1.0;
+    var viewratio = (w / h);
+    console.log('Panel Ratio: ' + panels[p].ratio + 'View Ratio: ' + viewratio);
+    if (panels[p].ratio >= (w / h)) {
+	console.log("WIDTH")
+	scale = panels[p].scalex;
+    } else {
+	console.log("HEIGHT")
+	scale = panels[p].scaley;
+    }
+    anime({
 	targets: ".page",
-	transformOrigin: panel.origin,
-	scale: panel.scale,
-	translateX: panel.x + '%',
-	translateY: panel.y + '%',
+	transformOrigin: panels[p].x + ' ' + panels[p].y,
+	scale: scale,
+	translateX: panels[p].x,
+	translateY: panels[p].y,
 	duration: speed,
 	easing: 'easeOutExpo',
 	loop: false,
@@ -130,66 +160,34 @@ function nextPanel() {
     pos++;
     console.log(pos)
     console.log(panels.length)
-    if (pos > panels.length) {
-	pos = -1;
+    if (pos >= panels.length) {
 	// TODO! Go to next page
-    } else {
-
-    // If panel aspect is greater than viewport aspect, use panel width for scale
-    if ((page.ratiowidth * panels[pos].width) / (page.ratioheight * panels[pos].height) >= (w / h)) {
-	// Use width
-	panel.scale = w / (page.ratiowidth * panels[pos].width);
-
-	x = panels[pos].width / 2 + panels[pos].x; // Center of panel
-	x = (x / page.svgwidth * 100) * (-1); // Center as percentage of page
-	panel.x = x;
-
-	y = panels[pos].height / 2 + panels[pos].y;
-	y = y / page.svgheight * 100 * (-1);
-	panel.y = y;
-
-	panel.origin = panel.x + '% ' + panel.y + '%'
-
-    } else {
-	// Use height
-	panel.scale = h / (page.ratioheight * panels[pos].height);
+	pos = 0;
     }
-	focus();
+    focus(pos);
+}
+
+function prevPanel() {
+    menuHide();
+    getSize();
+    pos--;
+    console.log(pos)
+    console.log(panels.length)
+    if (pos < 0) {
+	// TODO! Go to previous page
+	pos = panels.length -1;
     }
+    focus(pos);
 }
 
 next.onclick = function () {
     nextPanel();
 }
-/*next.onclick = function () {
-    console.log(page);
-    menuHide();
-    if (nexttime == false) {
-	var zoomin = anime({
-	    targets: '.page',
-	    scale: 2.0,
-	    translateX: 200.0,
-	    duration: speed,
-	    easing: 'easeOutExpo',
-	    loop: false
-	});
-    } else {
-	var zoomout = anime({
-	    targets: ".page",
-	    scale: 1.0,
-	    translateX: 0.0,
-	    duration: speed,
-	    easing: 'easeOutExpo',
-	    loop: false,
-	});
-    }
-    nexttime = !nexttime;
-}*/
 
 menu.onclick = function () {
     menuToggle();
 }
 
 prev.onclick = function () {
-    getSize();
+    prevPanel();
 }
