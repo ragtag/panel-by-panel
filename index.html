@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="js/anime.min.js"></script>
   </head>
-  <body>
+  <body onload="init()">
 
     <div id="container">
-      <p id="demo">THIS IS A TEST</p>
       <nav>
 	<button class="navbtn" id="prevbtn">Previous<br/>Page</button>
 	<button class="navbtn" id="menubtn">Configure<br/>Reader</button>
@@ -20,9 +19,12 @@
 	</div>
       </nav>
     </div>
-
     <div id="pagecontainer">
-      <img class="page" src="images/the-pillow-method-1.jpg" />
+      <img src="images/the-pillow-method-1.jpg"
+	   class="page"
+	   id="page"
+	   style="transform-origin: 50% 50%; transform: scale(1.0) translateX(-50%) translateY(-50%);"
+	   />
     </div>
     
     <script type="text/javascript" src="js/reveal.js"></script>
