@@ -1,21 +1,82 @@
 // Adjust the speed of animatons.
 var speed = 2000;
 
-var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+var w = 100;
+var h = 100;
 
-var page = { w: w, h: h };
+var page = {};
 var panels = [];
 var pos = 0;
-var panel = { id: 'aaaaa', scalex: 1.0, scaley: 1.0, x: '-50%', y: '-50%' }
 
-var img = document.getElementById('page');
-var prev = document.getElementById('prevbtn');
-var menu = document.getElementById('menubtn');
-var next = document.getElementById('nextbtn');
+var img;
+var prev;
+var menu;
+var next;
 
 var nexttime = false
 var menuvis = true
+
+
+// INIT
+
+window.onload = function() {
+    init();
+    readSVG();
+
+    // TODO! Hacky way to get around incorrect position on first run.
+    oldspeed = speed;
+    speed = 1;
+    focus(pos);
+    focus(pos);
+    speed = oldspeed
+
+    assignButtons();
+}
+
+function init() {   
+    w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    
+    img = document.getElementById('page');
+
+    page = { w: w, h: h };
+
+    var panel = {
+	id: 'AAAAA',
+	ratio: img.clientWidth / img.clientHeight,
+	scalex: 1.0,
+	scaley: 1.0,
+	x: '-50%',
+	y: '-50%'
+    }
+    panels.push(panel)
+    pos = 0;
+}
+
+function getSize() {
+    w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    page.ratiowidth = img.clientWidth / page.svgwidth;
+    page.ratioheight =  img.clientHeight / page.svgheight;
+    console.log(page);
+}
+
+function assignButtons() {
+    next = document.getElementById('nextbtn');
+    next.onclick = function () {
+	nextPanel();
+    }
+
+    menu = document.getElementById('menubtn');
+    menu.onclick = function () {
+	menuToggle();
+    }
+
+    prev = document.getElementById('prevbtn');
+    prev.onclick = function () {
+	prevPanel();
+    }
+}
 
 // MENU
 
@@ -51,10 +112,6 @@ function menuToggle() {
 
 // SVG Parsing
 
-function init() {
-    readSVG();
-}
-
 function sortPanels(a,b) {
     if (a.id < b.id)
 	return -1;
@@ -76,18 +133,14 @@ function readSVG() {
 
 function parseSVG(xml) {
     page = {};
-    panels = [];
     var x, i, xmlDoc, txt;
     xmlDoc = xml.responseXML;
     svg = xmlDoc.getElementsByTagName('svg');
     page.svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
     page.svgheight = parseFloat(svg[0].getAttribute('height').replace(/[^0-9.]/g,''));
     getSize();
-    console.log(page);
     rect = xmlDoc.getElementsByTagName("rect");
 
-    var panel = { id: 'aaaaa', scalex: 1.0, scaley: 1.0, x: '-50%', y: '-50%' }
-    panels.push(panel)
     for (i = 0; i<rect.length; i++) {
 	panel = {};
 	panel.id = rect[i].getAttribute('id');
@@ -120,26 +173,13 @@ function parseSVG(xml) {
 
 // NAVIGATION
 
-function getSize() {
-    w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    page.imgwidth = img.clientWidth;
-    page.imgheight = img.clientHeight;
-    page.ratiowidth = page.imgwidth / page.svgwidth;
-    page.ratioheight =  page.imgheight / page.svgheight;
-    console.log(page);
-}
-
 function focus(p) {
-    console.log(panels[p]);
+    console.log("FOCUS")
     var scale = 1.0;
     var viewratio = (w / h);
-    console.log('Panel Ratio: ' + panels[p].ratio + 'View Ratio: ' + viewratio);
     if (panels[p].ratio >= (w / h)) {
-	console.log("WIDTH")
 	scale = panels[p].scalex;
     } else {
-	console.log("HEIGHT")
 	scale = panels[p].scaley;
     }
     anime({
@@ -158,8 +198,6 @@ function nextPanel() {
     menuHide();
     getSize();
     pos++;
-    console.log(pos)
-    console.log(panels.length)
     if (pos >= panels.length) {
 	// TODO! Go to next page
 	pos = 0;
@@ -171,8 +209,6 @@ function prevPanel() {
     menuHide();
     getSize();
     pos--;
-    console.log(pos)
-    console.log(panels.length)
     if (pos < 0) {
 	// TODO! Go to previous page
 	pos = panels.length -1;
@@ -180,14 +216,3 @@ function prevPanel() {
     focus(pos);
 }
 
-next.onclick = function () {
-    nextPanel();
-}
-
-menu.onclick = function () {
-    menuToggle();
-}
-
-prev.onclick = function () {
-    prevPanel();
-}
