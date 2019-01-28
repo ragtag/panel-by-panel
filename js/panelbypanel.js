@@ -31,7 +31,6 @@ window.onresize = function() {
 }
 
 function init() {
-    pos = 0;
     oldspeed = speed;
     speed = 1;
     focus();
@@ -187,6 +186,7 @@ function parseSVG(xml) {
 	panels.push(panel)
     }
     panels.sort(sortPanels)
+    console.log(page)
     console.log(panels);
     init();
 }
@@ -222,11 +222,11 @@ function prevPanel() {
     pos--;
     if (pos < 0) {
 	// TODO! Go to previous page
-	pos = panels.length -1;
 	page--;
 	readSVG();
+	pos = panels.length -1;
 	console.log("GOING TO PREVIOUS PAGE");
-	console.log(page);
+	console.log(pos);
 	img.src = pages[page].image;
     }
     focus();
@@ -237,17 +237,13 @@ function nextPanel() {
     pos++;
     if (pos >= panels.length) {
 	// TODO! Go to next page
-	pos = 0;
 	page++;
 	readSVG();
+	pos = 0;
 	console.log("GOING TO NEXT PAGE");
-	console.log(page);
+	console.log(pos);
 	img.src = pages[page].image;
     }
     focus();
 }
 
-function nextPage() {
-    page++;
-    init();
-}
