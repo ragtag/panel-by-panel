@@ -4,6 +4,8 @@ var speed = 2000;
 var w = 0;
 var h = 0;
 
+var pages = [];
+var page = 0;
 var panels = [];
 var pos = 0;
 
@@ -19,15 +21,8 @@ var menuvis = true
 // INIT
 
 window.onload = function() {
-    init();
-    readSVG();
-    // TODO! Hacky way to get around incorrect position on first run.
-    oldspeed = speed;
-    speed = 1;
-    focus();
-    focus();
-    speed = oldspeed
-
+    loadPages();
+    // readSVG();
     assignButtons();
 }
 
@@ -35,16 +30,20 @@ window.onresize = function() {
     focus();
 }
 
-function init() {   
-    getSize();
-    img = document.getElementById('page');
+function init() {
     pos = 0;
+    oldspeed = speed;
+    speed = 1;
+    focus();
+    focus();
+    speed = oldspeed
+
 }
 
 function getSize() {
     w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    console.log('Width: ' + w + ' - Height: '+ h);
+    //console.log('Width: ' + w + ' - Height: '+ h);
 }
 
 function assignButtons() {
@@ -95,6 +94,31 @@ function menuToggle() {
     menuvis = !menuvis;
 }
 
+// Pages
+
+function loadPages() { 
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	    storePages(JSON.parse(this.responseText));
+	}
+    };
+    xmlhttp.open("GET", "./pages.json", true);
+    xmlhttp.send();
+}
+
+function storePages(json) {
+    for (i = 0; i<json.pages.length; i++) {
+	p = {
+	    image: json.pages[i],
+	    svg: json.pages[i].replace(/\.[^\.]+$/, '.svg'),
+	    thumb: json.pages[i].replace(/\.[^\.]+$/, '-thumbnail.jpg'),
+	}
+	pages.push(p);
+    }
+    console.log(pages);
+    readSVG();
+}
 
 // SVG Parsing
 
@@ -106,6 +130,7 @@ function sortPanels(a,b) {
     return 0
 }
 
+
 function readSVG() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -113,12 +138,14 @@ function readSVG() {
 	    parseSVG(this);
 	}
     };
-    xmlhttp.open("GET", "./images/the-pillow-method-1.svg", false);
+    xmlhttp.open("GET", pages[page].svg, true);
     xmlhttp.send();
 }
 
 function parseSVG(xml) {
     var x, i, xmlDoc, txt;
+    panels = [];
+    img = document.getElementById('page');
     xmlDoc = xml.responseXML;
     svg = xmlDoc.getElementsByTagName('svg');
     svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
@@ -161,6 +188,7 @@ function parseSVG(xml) {
     }
     panels.sort(sortPanels)
     console.log(panels);
+    init();
 }
 
 
@@ -170,7 +198,7 @@ function focus() {
     getSize();
     var scale = 1.0;
     var viewratio = (w / h);
-    console.log(panels[pos])
+    //console.log(panels[pos])
     if (panels[pos].ratio >= (w / h)) {
 	scale = w / panels[pos].width;
     } else {
@@ -188,15 +216,6 @@ function focus() {
     });
 }
 
-function nextPanel() {
-    menuHide();
-    pos++;
-    if (pos >= panels.length) {
-	// TODO! Go to next page
-	pos = 0;
-    }
-    focus();
-}
 
 function prevPanel() {
     menuHide();
@@ -204,7 +223,31 @@ function prevPanel() {
     if (pos < 0) {
 	// TODO! Go to previous page
 	pos = panels.length -1;
+	page--;
+	readSVG();
+	console.log("GOING TO PREVIOUS PAGE");
+	console.log(page);
+	img.src = pages[page].image;
     }
     focus();
 }
 
+function nextPanel() {
+    menuHide();
+    pos++;
+    if (pos >= panels.length) {
+	// TODO! Go to next page
+	pos = 0;
+	page++;
+	readSVG();
+	console.log("GOING TO NEXT PAGE");
+	console.log(page);
+	img.src = pages[page].image;
+    }
+    focus();
+}
+
+function nextPage() {
+    page++;
+    init();
+}
