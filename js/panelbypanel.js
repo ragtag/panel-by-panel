@@ -38,13 +38,13 @@ window.onresize = function() {
 function init() {   
     getSize();
     img = document.getElementById('page');
-
     pos = 0;
 }
 
 function getSize() {
     w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    console.log('Width: ' + w + ' - Height: '+ h);
 }
 
 function assignButtons() {
@@ -123,17 +123,14 @@ function parseSVG(xml) {
     svg = xmlDoc.getElementsByTagName('svg');
     svgwidth = parseFloat(svg[0].getAttribute('width').replace(/[^0-9.]/g,''));
     svgheight = parseFloat(svg[0].getAttribute('height').replace(/[^0-9.]/g,''));
-    getSize();
     rect = xmlDoc.getElementsByTagName("rect");
 
     // Create the page as panel 0
-    width = (img.clientWidth / svgwidth) * svgwidth;
-    height = (img.clientHeight / svgheight) * svgheight;
     var panel = {
 	id: '  the_page',
-	width: width,
-	height: height,
-	ratio: width / height,
+	width: img.clientWidth,
+	height: img.clientHeight,
+	ratio: img.clientWidth / img.clientHeight,
 	x: '-50%',
 	y: '-50%'
     }
@@ -144,11 +141,9 @@ function parseSVG(xml) {
 	panel.id = rect[i].getAttribute('id');
 	
 	// Get scale values
-	height = parseFloat(rect[i].getAttribute('height'));
-	panel.height = (img.clientHeight / svgheight) * height;
-	width = parseFloat(rect[i].getAttribute('width'));
-	panel.width = (img.clientWidth / svgwidth) * width;
-	panel.ratio = width / height;
+	panel.height = (img.clientHeight / svgheight) * parseFloat(rect[i].getAttribute('height'));
+	panel.width = (img.clientWidth / svgwidth) * parseFloat(rect[i].getAttribute('width'));
+	panel.ratio = parseFloat(rect[i].getAttribute('width')) / parseFloat(rect[i].getAttribute('height'));
 
 	// Center of panel
 	x = parseFloat(rect[i].getAttribute('width')) / 2 + parseFloat(rect[i].getAttribute('x'));
