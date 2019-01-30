@@ -1,7 +1,52 @@
+'use strict';
 // Set the speed of animatons.
-var speed = 2000;
+//const speed = 2000;
 
-var w = 0;
+class PanelByPanel {
+    constructor(pages) {
+	this.pages = pages;
+	console.log("Starting Panel by Panel");
+	console.log(this.pages);
+    }
+}
+
+class Comic {
+    constructor(request) {
+	console.log("Ragnar was here!");
+	request.addEventListener("progress", this.updateProgress);
+	request.addEventListener("load", this.transferComplete);
+	request.addEventListener("error", this.transferFailed);
+	request.addEventListener("abort", this.transferCanceled);
+	request.open("GET", "./lab/pages.json", true);
+	request.send();
+    }
+
+    updateProgress (oEvent) {
+	if (oEvent.lengthComputable) {
+	    var percentComplete = oEvent.loaded / oEvent.total * 100;
+	    console.log("Progress: " + percentComplete + "%");
+	} else {
+	    console.log("Unable to get progress");
+	}
+    }
+    
+    transferComplete(event) {
+	this.pages = JSON.parse(this.responseText);
+	console.log("The transfer is complete");
+    }
+	
+    transferFailed(event) {
+	console.log("An error occurred");
+    }
+    
+    transferCanceled(event) {
+	console.log("The transfer has been cancelled by the user")
+    }
+
+    
+}
+
+/*var w = 0;
 var h = 0;
 
 var pages = [];
@@ -16,17 +61,17 @@ var next;
 
 var nexttime = false
 var menuvis = true
-
+*/
 
 // INIT
 
-window.onload = function() {
+/*window.onload = function() {
     loadPages();
     // readSVG();
     assignButtons();
-}
+}*/
 
-window.onresize = function() {
+/*window.onresize = function() {
     focus();
 }
 
@@ -92,10 +137,11 @@ function menuToggle() {
     }
     menuvis = !menuvis;
 }
+*/
 
 // Pages
 
-function loadPages() { 
+/*function loadPages() { 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
@@ -140,6 +186,7 @@ function readSVG() {
     xmlhttp.open("GET", pages[page].svg, true);
     xmlhttp.send();
 }
+
 
 function parseSVG(xml) {
     var x, i, xmlDoc, txt;
@@ -190,10 +237,10 @@ function parseSVG(xml) {
     console.log(panels);
     init();
 }
-
+*/
 
 // NAVIGATION
-
+/*
 function focus() {
     getSize();
     var scale = 1.0;
@@ -245,5 +292,18 @@ function nextPanel() {
 	img.src = pages[page].image;
     }
     focus();
+}
+*/
+
+
+window.onload = function () {
+    console.log("Page loaded");
+    const request = new XMLHttpRequest();
+    const comic = new Comic(request);
+    request.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	    const pbp = new PanelByPanel(JSON.parse(this.responseText));
+	}
+    }
 }
 
