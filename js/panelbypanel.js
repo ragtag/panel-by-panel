@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 // Set the speed of animatons.
 //const speed = 2000;
 
@@ -6,6 +6,25 @@ class PanelByPanel {
     constructor(pages) {
 	this.pages = pages;
 	console.log("Starting Panel by Panel");
+	console.log(this.pages);
+	var self = this;
+	document.getElementById('nextbtn').onclick = function() { self.next() }
+	document.getElementById('prevbtn').onclick = function() { self.prev() }
+	document.getElementById('menubtn').onclick = function() { self.menu() }
+    }
+
+    next() {
+	console.log("NEXT");
+	console.log(this.pages);
+    }
+
+    prev() {
+	console.log("PREV");
+	console.log(this.pages);
+    }
+
+    menu() {
+	console.log("MENU");
 	console.log(this.pages);
     }
 }
@@ -17,7 +36,7 @@ class Comic {
 	request.addEventListener("load", this.transferComplete);
 	request.addEventListener("error", this.transferFailed);
 	request.addEventListener("abort", this.transferCanceled);
-	request.open("GET", "./lab/pages.json", true);
+	request.open("GET", "./images/pages.json", true);
 	request.send();
     }
 
@@ -31,7 +50,6 @@ class Comic {
     }
     
     transferComplete(event) {
-	this.pages = JSON.parse(this.responseText);
 	console.log("The transfer is complete");
     }
 	
@@ -43,7 +61,11 @@ class Comic {
 	console.log("The transfer has been cancelled by the user")
     }
 
-    
+    parseResponse(json) {
+	console.log('in parse method');
+	this.pages = JSON.parse(json);
+	let img = document.getElementById('page');
+    }
 }
 
 /*var w = 0;
@@ -302,7 +324,12 @@ window.onload = function () {
     const comic = new Comic(request);
     request.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-	    const pbp = new PanelByPanel(JSON.parse(this.responseText));
+	    console.log('Parsing output');
+	    comic.parseResponse(this.responseText);
+	    console.log(comic);
+	    const pbp = new PanelByPanel(comic);
+
+	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));
 	}
     }
 }
