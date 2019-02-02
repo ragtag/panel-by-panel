@@ -17,28 +17,6 @@ nav, #container, #pagecontainer {
     z-index: 0;
 }
 
-.pageOLD {
-    max-height: 100%;
-    max-width: 100%;
-    display: block;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.page {
-    max-height: 100%;
-    max-width: 100%;
-    display: block;
-    /* top: 0;
-    bottom: 0;  */
-    position: relative;
-    top: 50%;
-    left: 50%;
-}
-
 /* Main menu */
 
 #menu {

@@ -1,37 +1,101 @@
-//'use strict';
+'use strict';
 // Set the speed of animatons.
 //const speed = 2000;
 
 class PanelByPanel {
-    constructor(pages) {
-	this.pages = pages;
+    constructor(comic) {
+	this.comic = comic;
+	this.currentPage
+	const img = document.getElementById('page');
 	console.log("Starting Panel by Panel");
-	console.log(this.pages);
+	console.log(this.comic);
 	var self = this;
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('menubtn').onclick = function() { self.menu() }
+	
+	this.artist = new Draw(this.comic);
+	this.artist.focus();
     }
 
     next() {
 	console.log("NEXT");
-	console.log(this.pages);
+	this.comic.currentPanel++;
+	this.artist.focus();
     }
 
     prev() {
 	console.log("PREV");
-	console.log(this.pages);
+	this.comic.currentPanel--;
+	this.artist.focus();
     }
 
     menu() {
 	console.log("MENU");
-	console.log(this.pages);
+	console.log(this.comic.pages);
+    }
+
+}
+
+class Draw {
+    constructor(comic) {
+	console.log("DRAWING");
+	this.comic = comic;
+	console.log(this.comic);
+	this.drawnPage = 0;
+	this.drawnPanel = 0;
+	this.getViewportSize();
+	this.getImageSize();
+	console.log(this);
+    }
+
+    getViewportSize() {
+	this.viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	this.viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    }
+
+    getImageSize() {
+	this.imageHeight = document.getElementById('page').naturalHeight;
+	this.imageWidth = document.getElementById('page').naturalWidth;
+    }
+
+    focus() {
+	this.getViewportSize();
+	this.getImageSize();
+	
+	let zoom = 1;
+	let panel = { x: 50, y: 50, width: 100, height: 100 };
+	if (this.comic.currentPanel != 0) {
+	    console.log("Show panel");
+	    console.log("Drawing page:  "+this.comic.currentPage);
+	    console.log("Drawing panel: "+this.comic.currentPanel);
+	    panel = this.comic.pages[this.comic.currentPage].panels[this.comic.currentPanel];
+	} else {
+	    console.log("Show page");
+	}
+	zoom = this.imageWidth / panel.width * this.viewportWidth / this.imageWidth / 10;
+	console.log("imageWidht / panelWitth * viewportWidth / imageWidth / 10");
+	console.log(this.imageWidth+" / "+panel.width+" * "+this.viewportWidth+" / "+this.imageWidth+" / 10");
+	console.log(zoom);
+	console.log(panel);
+	// Not sure why I'm dividing by 10 here, and not 100, but it works???
+	anime({
+	    targets: "#page",
+	    scale: zoom,
+	    translateX: (50 - panel.x) + '%',
+	    translateY: (50 - panel.y) + '%',
+	    duration: 1000,
+	    easing: 'easeOutExpo',
+	    loop: false,
+	});
     }
 }
 
 class Comic {
     constructor(request) {
-	console.log("Ragnar was here!");
+	this.currentPage = 0;
+	this.currentPanel = 0;
+	console.log("COMIC");
 	request.addEventListener("progress", this.updateProgress);
 	request.addEventListener("load", this.transferComplete);
 	request.addEventListener("error", this.transferFailed);
@@ -63,8 +127,15 @@ class Comic {
 
     parseResponse(json) {
 	console.log('in parse method');
-	this.pages = JSON.parse(json);
-	let img = document.getElementById('page');
+	this.pages = JSON.parse(json).pages;
+    }
+
+    next() {
+	// Go to next panel or page
+    }
+
+    prev() {
+	// Go to previous panel or page
     }
 }
 
