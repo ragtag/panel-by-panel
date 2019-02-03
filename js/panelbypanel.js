@@ -23,19 +23,20 @@ class PanelByPanel {
     }
 
     next() {
-	console.log("NEXT");
-	this.comic.currentPanel++;
+	this.comic.next();
+	console.log("PAGE:  "+this.comic.currentPage);
+	console.log("PANEL: "+this.comic.currentPanel);
 	this.artist.focus();
     }
 
     prev() {
-	console.log("PREV");
-	this.comic.currentPanel--;
+	this.comic.prev();
+	console.log("PAGE:  "+this.comic.currentPage);
+	console.log("PANEL: "+this.comic.currentPanel);
 	this.artist.focus();
     }
 
     menu() {
-	console.log("MENU");
 	console.log(this.comic.pages);
     }
 
@@ -45,12 +46,10 @@ class Draw {
     constructor(comic) {
 	console.log("DRAWING");
 	this.comic = comic;
-	console.log(this.comic);
 	this.drawnPage = 0;
-	this.drawnPanel = 0;
+	this.drawnPanel = -1;
 	this.getViewportSize();
 	this.getImageSize();
-	console.log(this);
     }
 
     getViewportSize() {
@@ -71,34 +70,31 @@ class Draw {
 	return (this.viewportWidth / this.viewportHeight);
     }
 
+    flip() {
+	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image
+    }
+    
     focus() {
+	console.log("Previous: "+this.drawnPage+" - Current: "+this.comic.currentPage);
+	if (this.comic.currentPage != this.drawnPage) {
+	    this.flip();
+	}
+
 	this.getViewportSize();
 	this.getImageSize();
-
-	console.log("Current panel: "+this.comic.currentPanel);
 
 	let scale = 1;
 	this.panel = { x: 50, y: 50, width: 100, height: 100 };
 	if (this.comic.currentPanel > -1) {
 	    this.panel = this.comic.pages[this.comic.currentPage].panels[this.comic.currentPanel];
-	} else {
-	    console.log("Show page");
 	}
 
-	console.log(this.panel);
-	console.log("Panel ratio "+this.panelRatio());
-	console.log("Viewport ratio "+this.viewportRatio());
 	if (this.panelRatio() <= this.viewportRatio()) {
-	    console.log("TALL");
 	    scale = 100 / this.panel.height * this.viewportHeight / this.imageHeight;
-	    console.log(100+" / "+this.panel.height+" * "+this.viewportHeight+" / "+ this.imageHeight);
 	} else {
-	    console.log("WIDE");
 	    scale = this.viewportWidth / this.imageWidth * 100 / this.panel.width;
-	    console.log(this.viewportWidth+" / "+this.imageWidth+" * "+100+" / "+this.panel.width);
 	}
 
-	console.log(scale);
 	anime({
 	    targets: "#page",
 	    scale: scale,
@@ -108,6 +104,7 @@ class Draw {
 	    easing: 'easeOutExpo',
 	    loop: false,
 	});
+	this.drawnPage = this.comic.currentPage;
     }
 }
 
@@ -147,15 +144,38 @@ class Comic {
 
     parseResponse(json) {
 	console.log('in parse method');
-	this.pages = JSON.parse(json).pages;
+	let conf = JSON.parse(json);
+	this.pages = conf.pages;
+	this.home = conf.home;
+	this.exit = conf.exit;
     }
 
     next() {
-	// Go to next panel or page
+	this.currentPanel++;
+	if (this.currentPanel >= this.pages[this.currentPage].panels.length) {
+	    this.currentPanel = -1;
+	    this.currentPage++;
+	    if (this.currentPage >= this.pages.length) {
+		console.log("THE END I NIGH!!!");
+		this.currentPage = this.pages.length - 1;
+		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
+		window.location.href = this.exit;
+	    }
+	}
     }
 
     prev() {
-	// Go to previous panel or page
+	this.currentPanel--;
+	if (this.currentPanel < -1) {
+	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
+	    this.currentPage--;
+	    if (this.currentPage < 0) {
+		console.log("THIS IS THE BEGINNING!!!");
+		this.currentPage = 0;
+		this.currentPanel = -1;
+		window.location.href = this.home;
+	    }
+	}
     }
 }
 

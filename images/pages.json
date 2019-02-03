@@ -1,4 +1,6 @@
 {
+    "home": "lab/index.html",
+    "exit": "index.html",
     "pages": [
 	{
 	    "image": "images/uv-1.jpg",
@@ -33,6 +35,114 @@
 		    "x": 50,
 		    "y": 90
 		}
+	    ]
+	},
+	{
+	    "image": "images/uv-2.jpg",
+	    "panels": [
+		{
+		    "height": 40,
+		    "width": 20,
+		    "x": 10,
+		    "y": 20
+		},
+		{
+		    "height": 20,
+		    "width": 80,
+		    "x": 60,
+		    "y": 10
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 25,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 75,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 100,
+		    "x": 50,
+		    "y": 90
+		}
+
+	    ]
+	},
+	{
+	    "image": "images/uv-3.jpg",
+	    "panels": [
+		{
+		    "height": 40,
+		    "width": 20,
+		    "x": 10,
+		    "y": 20
+		},
+		{
+		    "height": 20,
+		    "width": 80,
+		    "x": 60,
+		    "y": 10
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 25,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 75,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 100,
+		    "x": 50,
+		    "y": 90
+		}
+
+	    ]
+	},
+	{
+	    "image": "images/uv-4.jpg",
+	    "panels": [
+		{
+		    "height": 40,
+		    "width": 20,
+		    "x": 10,
+		    "y": 20
+		},
+		{
+		    "height": 20,
+		    "width": 80,
+		    "x": 60,
+		    "y": 10
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 25,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 50,
+		    "x": 75,
+		    "y": 40
+		},
+		{
+		    "height": 40,
+		    "width": 100,
+		    "x": 50,
+		    "y": 90
+		}
+
 	    ]
 	}
     ]
