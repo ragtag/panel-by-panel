@@ -19,6 +19,7 @@ class PanelByPanel {
 	
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
+	this.artist.setTitle();
 	window.onresize = function() { self.artist.focus() }
 	this.comic.preload();
     }
@@ -72,7 +73,13 @@ class Draw {
     }
 
     flip() {
-	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image
+	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
+	this.setTitle();
+    }
+    
+    setTitle() {
+	let p = this.comic.currentPage + 1;
+	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
     }
     
     focus() {
@@ -146,6 +153,7 @@ class Comic {
     parseResponse(json) {
 	console.log('in parse method');
 	let conf = JSON.parse(json);
+	this.title = conf.title;
 	this.pages = conf.pages;
 	this.home = conf.home;
 	this.exit = conf.exit;
