@@ -20,6 +20,7 @@ class PanelByPanel {
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
 	window.onresize = function() { self.artist.focus() }
+	this.comic.preload();
     }
 
     next() {
@@ -160,6 +161,8 @@ class Comic {
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 		window.location.href = this.exit;
+	    } else {
+		this.preload();
 	    }
 	}
     }
@@ -174,9 +177,23 @@ class Comic {
 		this.currentPage = 0;
 		this.currentPanel = -1;
 		window.location.href = this.home;
+	    } else {
+		this.preload();
 	    }
 	}
     }
+    
+    preload() {
+	if (this.currentPage < this.pages.length - 1) {
+	    let nextimg = new Image();
+	    nextimg.src = this.pages[this.currentPage + 1].image;
+	}
+	if (this.currentPage > 0) {
+	    let previmg = new Image();
+	    previmg.src = this.pages[this.currentPage - 1].image;
+	}
+    }
+
 }
 
 
