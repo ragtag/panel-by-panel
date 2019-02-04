@@ -17,6 +17,9 @@ class PanelByPanel {
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('menubtn').onclick = function() { self.menu() }
 	
+	let url = new URL(window.location.href);
+	this.comic.goto(parseInt(url.searchParams.get("page")));
+
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
 	this.artist.setTitle();
@@ -80,6 +83,7 @@ class Draw {
     setTitle() {
 	let p = this.comic.currentPage + 1;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
+	window.history.pushState("", "", '/index.html?page=' + p);
     }
     
     focus() {
@@ -188,6 +192,20 @@ class Comic {
 	    } else {
 		this.preload();
 	    }
+	}
+    }
+
+    goto(page) {
+	console.log("GOTO: "+page);
+	this.currentPage = page - 1;
+	console.log(typeof(this.currentPage));
+	if (this.currentPage < 0) {
+	    console.log("TOO EARLY");
+	    this.currentPage = 0;
+	}
+	if (this.currentPage >= this.pages.length) {
+	    this.currentPage = this.pages.length - 1;
+	    console.log("TOO LATE");
 	}
     }
     
