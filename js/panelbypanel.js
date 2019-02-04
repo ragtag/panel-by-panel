@@ -12,17 +12,21 @@ class PanelByPanel {
 	const img = document.getElementById('page');
 	console.log("Starting Panel by Panel");
 	console.log(this.comic);
-	var self = this;
+	let self = this;
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('menubtn').onclick = function() { self.menu() }
 	
 	let url = new URL(window.location.href);
-	this.comic.goto(parseInt(url.searchParams.get("page")));
+	let p = parseInt(url.searchParams.get("page"));
+	if (!isNaN(p)) {
+	    this.comic.goto(p);
+	}
 
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
 	this.artist.setTitle();
+	this.keyboardNav();
 	window.onresize = function() { self.artist.focus() }
 	this.comic.preload();
     }
@@ -45,6 +49,38 @@ class PanelByPanel {
 	console.log(this.comic.pages);
     }
 
+    keyboardNav() {
+	let self = this;
+	document.onkeyup = function(e) {
+	    console.log("KEY PRESSED");
+	    console.log(e.which);
+	    console.log(e);
+	    switch(e.which) {
+	    case 37: // Left arrow
+		self.prev();
+		break;
+	    case 32: // Space
+	    case 39: // Rigth arrow
+		self.next();
+		break;
+	    case 33: // Page Up
+		console.log("GO NEXT PAG");
+		self.comic.goto(self.comic.currentPage + 2);
+		self.artist.focus();
+		self.artist.setTitle();
+		self.comic.preload();
+		break;
+	    case 34: // Page Down
+		self.comic.goto(self.comic.currentPage);
+		self.artist.focus();
+		self.artist.setTitle();
+		self.comic.preload();
+		break;
+	    default:
+		console.log("Unknown key pressed");
+	    }
+	}
+    }
 }
 
 class Draw {
@@ -198,6 +234,7 @@ class Comic {
     goto(page) {
 	console.log("GOTO: "+page);
 	this.currentPage = page - 1;
+	this.currentPanel = -1;
 	console.log(typeof(this.currentPage));
 	if (this.currentPage < 0) {
 	    console.log("TOO EARLY");
