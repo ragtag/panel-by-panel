@@ -27,6 +27,7 @@ class PanelByPanel {
 	this.artist.focus();
 	this.artist.setTitle();
 	this.keyboardNav();
+	this.touchNav();
 	window.onresize = function() { self.artist.focus() }
 	this.comic.preload();
     }
@@ -47,6 +48,7 @@ class PanelByPanel {
 
     menu() {
 	console.log(this.comic.pages);
+	alert("Menu");
     }
 
     keyboardNav() {
@@ -81,7 +83,91 @@ class PanelByPanel {
 	    }
 	}
     }
+
+    touchNav() {
+	let self = this;
+	let swiper = new Swipe(document.querySelector('#container'));
+	swiper.onLeft(function() { self.next() });
+	swiper.onRight(function() { self.prev() });
+	swiper.onUp(function() { self.menu() });
+	swiper.run();
+    }
 }
+
+/*
+  Thanks to Marwelln (https://stackoverflow.com/users/397195/marwelln) for the Swipe class,
+  which I got in his reply to the following StackOverflow question:
+  https://stackoverflow.com/questions/2264072
+*/
+class Swipe {
+    constructor(element) {
+        this.xDown = null;
+        this.yDown = null;
+	this.element = element;
+
+        this.element.addEventListener('touchstart', function(evt) {
+            this.xDown = evt.touches[0].clientX;
+            this.yDown = evt.touches[0].clientY;
+        }.bind(this), false);
+
+    }
+
+    onLeft(callback) {
+        this.onLeft = callback;
+        return this;
+    }
+
+    onRight(callback) {
+        this.onRight = callback;
+        return this;
+    }
+
+    onUp(callback) {
+        this.onUp = callback;
+        return this;
+    }
+
+    onDown(callback) {
+        this.onDown = callback;
+        return this;
+    }
+
+    handleTouchMove(evt) {
+        if ( ! this.xDown || ! this.yDown ) {
+            return;
+        }
+
+        let xUp = evt.touches[0].clientX;
+        let yUp = evt.touches[0].clientY;
+
+        this.xDiff = this.xDown - xUp;
+        this.yDiff = this.yDown - yUp;
+
+        if ( Math.abs( this.xDiff ) > Math.abs( this.yDiff ) ) {
+            if ( this.xDiff > 0 ) {
+                this.onLeft();
+            } else {
+                this.onRight();
+            }
+        } else {
+            if ( this.yDiff > 0 ) {
+                this.onUp();
+            } else {
+                this.onDown();
+            }
+        }
+
+        this.xDown = null;
+        this.yDown = null;
+    }
+
+    run() {
+        this.element.addEventListener('touchmove', function(evt) {
+            this.handleTouchMove(evt).bind(this);
+        }.bind(this), false);
+    }
+}
+
 
 class Draw {
     constructor(comic) {
