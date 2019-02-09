@@ -11,8 +11,6 @@ class PanelByPanel {
 	this.comic = comic;
 	this.currentPage
 	const img = document.getElementById('page');
-	console.log("Starting Panel by Panel");
-	console.log(this.comic);
 	let self = this;
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
@@ -36,22 +34,17 @@ class PanelByPanel {
 
     next() {
 	this.comic.next();
-	console.log("PAGE:  "+this.comic.currentPage);
-	console.log("PANEL: "+this.comic.currentPanel);
 	this.artist.hideMenu();
 	this.artist.focus();
     }
 
     prev() {
 	this.comic.prev();
-	console.log("PAGE:  "+this.comic.currentPage);
-	console.log("PANEL: "+this.comic.currentPanel);
 	this.artist.hideMenu();
 	this.artist.focus();
     }
 
     menu() {
-	console.log(this.comic.pages);
 	if (document.getElementById("menu").getBoundingClientRect().top < -32) {
 	    this.artist.showMenu();
 	} else {
@@ -62,9 +55,6 @@ class PanelByPanel {
     keyboardNav() {
 	let self = this;
 	document.onkeyup = function(e) {
-	    console.log("KEY PRESSED");
-	    console.log(e.which);
-	    console.log(e);
 	    switch(e.which) {
 	    case 37: // Left arrow
 		self.prev();
@@ -74,7 +64,6 @@ class PanelByPanel {
 		self.next();
 		break;
 	    case 33: // Page Up
-		console.log("GO NEXT PAG");
 		self.comic.goto(self.comic.currentPage + 2);
 		self.artist.focus();
 		self.artist.setTitle();
@@ -87,7 +76,6 @@ class PanelByPanel {
 		self.comic.preload();
 		break;
 	    default:
-		console.log("Unknown key pressed");
 	    }
 	}
     }
@@ -178,7 +166,6 @@ class Swipe {
 
 class Draw {
     constructor(comic) {
-	console.log("DRAWING");
 	this.comic = comic;
 	this.drawnPage = 0;
 	this.drawnPanel = -1;
@@ -216,7 +203,6 @@ class Draw {
     }
     
     focus() {
-	console.log("Previous: "+this.drawnPage+" - Current: "+this.comic.currentPage);
 	if (this.comic.currentPage != this.drawnPage) {
 	    this.flip();
 	}
@@ -274,7 +260,6 @@ class Comic {
     constructor(request) {
 	this.currentPage = 0;
 	this.currentPanel = -1;
-	console.log("COMIC");
 	request.addEventListener("progress", this.updateProgress);
 	request.addEventListener("load", this.transferComplete);
 	request.addEventListener("error", this.transferFailed);
@@ -286,7 +271,6 @@ class Comic {
     updateProgress (oEvent) {
 	if (oEvent.lengthComputable) {
 	    var percentComplete = oEvent.loaded / oEvent.total * 100;
-	    console.log("Progress: " + percentComplete + "%");
 	} else {
 	    console.log("Unable to get progress");
 	}
@@ -305,7 +289,6 @@ class Comic {
     }
 
     parseResponse(json) {
-	console.log('in parse method');
 	let conf = JSON.parse(json);
 	this.title = conf.title;
 	this.pages = conf.pages;
@@ -319,7 +302,6 @@ class Comic {
 	    this.currentPanel = -1;
 	    this.currentPage++;
 	    if (this.currentPage >= this.pages.length) {
-		console.log("THE END I NIGH!!!");
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 		window.location.href = this.exit;
@@ -335,7 +317,6 @@ class Comic {
 	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    this.currentPage--;
 	    if (this.currentPage < 0) {
-		console.log("THIS IS THE BEGINNING!!!");
 		this.currentPage = 0;
 		this.currentPanel = -1;
 		window.location.href = this.home;
@@ -346,17 +327,13 @@ class Comic {
     }
 
     goto(page) {
-	console.log("GOTO: "+page);
 	this.currentPage = page - 1;
 	this.currentPanel = -1;
-	console.log(typeof(this.currentPage));
 	if (this.currentPage < 0) {
-	    console.log("TOO EARLY");
 	    this.currentPage = 0;
 	}
 	if (this.currentPage >= this.pages.length) {
 	    this.currentPage = this.pages.length - 1;
-	    console.log("TOO LATE");
 	}
     }
     
@@ -375,14 +352,11 @@ class Comic {
 
 
 window.onload = function () {
-    console.log("Page loaded");
     const request = new XMLHttpRequest();
     const comic = new Comic(request);
     request.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-	    console.log('Parsing output');
 	    comic.parseResponse(this.responseText);
-	    console.log(comic);
 	    const pbp = new PanelByPanel(comic);
 
 	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));
