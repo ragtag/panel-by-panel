@@ -1,7 +1,8 @@
 'use strict';
 
 // Set the speed of animations.
-const speed = 750;
+const speed = 750;  // Moving from panel to panel in milliseconds
+const menuDelay = 2000; // How long to keep the menu on screen after the page loads in milliseconds
 
 
 
@@ -28,6 +29,7 @@ class PanelByPanel {
 	this.artist.setTitle();
 	this.keyboardNav();
 	this.touchNav();
+	this.artist.hideMenu(menuDelay);
 	window.onresize = function() { self.artist.focus() }
 	this.comic.preload();
     }
@@ -36,6 +38,7 @@ class PanelByPanel {
 	this.comic.next();
 	console.log("PAGE:  "+this.comic.currentPage);
 	console.log("PANEL: "+this.comic.currentPanel);
+	this.artist.hideMenu();
 	this.artist.focus();
     }
 
@@ -43,12 +46,17 @@ class PanelByPanel {
 	this.comic.prev();
 	console.log("PAGE:  "+this.comic.currentPage);
 	console.log("PANEL: "+this.comic.currentPanel);
+	this.artist.hideMenu();
 	this.artist.focus();
     }
 
     menu() {
 	console.log(this.comic.pages);
-	alert("Menu");
+	if (document.getElementById("menu").getBoundingClientRect().top < -32) {
+	    this.artist.showMenu();
+	} else {
+	    this.artist.hideMenu();
+	}
     }
 
     keyboardNav() {
@@ -89,7 +97,6 @@ class PanelByPanel {
 	let swiper = new Swipe(document.querySelector('#container'));
 	swiper.onLeft(function() { self.next() });
 	swiper.onRight(function() { self.prev() });
-	swiper.onUp(function() { self.menu() });
 	swiper.run();
     }
 }
@@ -239,6 +246,27 @@ class Draw {
 	    loop: false,
 	});
 	this.drawnPage = this.comic.currentPage;
+    }
+
+    hideMenu(delay=0) {
+	anime({
+	    targets: "#menu",
+	    translateY: "-64px",
+	    duration: speed,
+	    delay: delay,
+	    easing: 'easeOutExpo',
+	    loop: false,
+	});
+    }
+
+    showMenu() {
+	anime({
+	    targets: "#menu",
+	    translateY: "0",
+	    duration: speed,
+	    easing: 'easeOutExpo',
+	    loop: false,
+	});
     }
 }
 
