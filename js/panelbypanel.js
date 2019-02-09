@@ -2,19 +2,22 @@
 
 // Set the speed of animations.
 const speed = 750;  // Moving from panel to panel in milliseconds
-const menuDelay = 2000; // How long to keep the menu on screen after the page loads in milliseconds
+const menuDelay = 1500; // How long to keep the menu on screen after the page loads in milliseconds
 
 
 
 class PanelByPanel {
     constructor(comic) {
 	this.comic = comic;
-	this.currentPage
+	this.currentPage;
+	this.panelMode = true;
 	const img = document.getElementById('page');
 	let self = this;
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('menubtn').onclick = function() { self.menu() }
+	this.panelButton = document.getElementById('pbpbtn');
+	this.panelButton.onclick = function() { self.togglePanelMode() }
 	
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
@@ -33,13 +36,21 @@ class PanelByPanel {
     }
 
     next() {
-	this.comic.next();
+	if (this.panelMode) {
+	    this.comic.next();
+	} else {
+	    this.comic.goto(this.comic.currentPage + 2);
+	}
 	this.artist.hideMenu();
 	this.artist.focus();
     }
 
     prev() {
-	this.comic.prev();
+	if (this.panelMode) {
+	    this.comic.prev();
+	} else {
+	    this.comic.goto(this.comic.currentPage);
+	}
 	this.artist.hideMenu();
 	this.artist.focus();
     }
@@ -50,6 +61,17 @@ class PanelByPanel {
 	} else {
 	    this.artist.hideMenu();
 	}
+    }
+
+    togglePanelMode() {
+	if (this.panelMode == true) {
+	    this.panelMode = false;
+	    this.panelButton.style.opacity = 0.5;
+	} else {
+	    this.panelMode = true;
+	    this.panelButton.style.opacity = 1.0;
+	}
+	this.artist.hideMenu;
     }
 
     keyboardNav() {

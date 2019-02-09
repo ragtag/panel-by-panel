@@ -23,10 +23,15 @@ nav, #container, #pagecontainer {
 #menu {
     width: 100%;
     height: 64px;
-    top: 0;
     position: absolute;
     display: block;
     background: rgba(150, 150, 150, 0.75);
+}
+
+.menu-button {
+    border: none;
+    outline: none;
+    background: none;
 }
 
 #menu-left {
@@ -39,7 +44,7 @@ nav, #container, #pagecontainer {
     margin: 0 auto;
     width: 34%;
 }
-#menu-center img {
+#menu-center button {
     margin-left: auto;
     margin-right: auto;
     display: block;
