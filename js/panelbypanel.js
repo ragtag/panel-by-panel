@@ -359,10 +359,10 @@ class Comic {
 	this.currentPage = page - 1;
 	this.currentPanel = -1;
 	if (this.currentPage < 0) {
-	    this.currentPage = 0;
+	    window.location.href = this.home;
 	}
 	if (this.currentPage >= this.pages.length) {
-	    this.currentPage = this.pages.length - 1;
+	    window.location.href = this.exit;
 	}
     }
     
