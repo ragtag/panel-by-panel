@@ -1,9 +1,15 @@
 'use strict';
 
-// Set the speed of animations.
-const speed = 750;  // Moving from panel to panel in milliseconds
-const menuDelay = 1500; // How long to keep the menu on screen after the page loads in milliseconds
-
+// Animation speed when moving from panel to panel in milliseconds
+const speed = 750;  
+// How long to keep the menu on screen after the page initally loads in milliseconds
+const menuDelay = 1500;
+// Switch to panel by panel mode by default, when on a dislpay less than this width or...
+const pbpMaxWidth = 800;
+// ...this height.
+const pbpMaxHeight = 1000;
+// Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
+const debug = false;
 
 
 class PanelByPanel {
@@ -11,27 +17,41 @@ class PanelByPanel {
 	this.comic = comic;
 	this.currentPage;
 	this.panelMode = true;
-	const img = document.getElementById('page');
-	let self = this;
-	document.getElementById('nextbtn').onclick = function() { self.next() }
-	document.getElementById('prevbtn').onclick = function() { self.prev() }
-	document.getElementById('menubtn').onclick = function() { self.menu() }
-	this.panelButton = document.getElementById('pbpbtn');
-	this.panelButton.onclick = function() { self.togglePanelMode() }
-	
+
+	// Go to specific page directly
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
 	if (!isNaN(p)) {
 	    this.comic.goto(p);
 	}
 
+	// Draw the page
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
 	this.artist.setTitle();
-	this.keyboardNav();
-	this.touchNav();
 	this.artist.hideMenu(menuDelay);
 	window.onresize = function() { self.artist.focus() }
+
+	// Enable navigation
+	let self = this;
+	document.getElementById('nextbtn').onclick = function() { self.next() }
+	document.getElementById('prevbtn').onclick = function() { self.prev() }
+	document.getElementById('menubtn').onclick = function() { self.menu() }
+	this.panelButton = document.getElementById('pbpbtn');
+	this.panelButton.onclick = function() { self.togglePanelMode() }
+	this.keyboardNav();
+	this.touchNav();
+
+	// Set panel-by-panel navigation, based on ppi and window size
+	if ( this.artist.viewportWidth > pbpMaxWidth && this.artist.viewportHeight > pbpMaxHeight ) {
+	    this.panelMode = true;
+	    this.togglePanelMode();
+	}
+	if (debug) {
+	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
+	}
+
+	// Preload the next/previous page
 	this.comic.preload();
     }
 
@@ -67,6 +87,8 @@ class PanelByPanel {
 	if (this.panelMode == true) {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
+	    this.comic.goto(this.comic.currentPage + 1);
+	    this.artist.focus();
 	} else {
 	    this.panelMode = true;
 	    this.panelButton.style.opacity = 1.0;
@@ -85,13 +107,13 @@ class PanelByPanel {
 	    case 39: // Rigth arrow
 		self.next();
 		break;
-	    case 33: // Page Up
+	    case 34: // Page Down
 		self.comic.goto(self.comic.currentPage + 2);
 		self.artist.focus();
 		self.artist.setTitle();
 		self.comic.preload();
 		break;
-	    case 34: // Page Down
+	    case 33: // Page Up
 		self.comic.goto(self.comic.currentPage);
 		self.artist.focus();
 		self.artist.setTitle();
@@ -110,6 +132,7 @@ class PanelByPanel {
 	swiper.run();
     }
 }
+
 
 /*
   Thanks to Marwelln (https://stackoverflow.com/users/397195/marwelln) for the Swipe class,
@@ -139,16 +162,6 @@ class Swipe {
         return this;
     }
 
-    onUp(callback) {
-        this.onUp = callback;
-        return this;
-    }
-
-    onDown(callback) {
-        this.onDown = callback;
-        return this;
-    }
-
     handleTouchMove(evt) {
         if ( ! this.xDown || ! this.yDown ) {
             return;
@@ -166,12 +179,6 @@ class Swipe {
             } else {
                 this.onRight();
             }
-        } else {
-            if ( this.yDiff > 0 ) {
-                this.onUp();
-            } else {
-                this.onDown();
-            }
         }
 
         this.xDown = null;
@@ -180,7 +187,7 @@ class Swipe {
 
     run() {
         this.element.addEventListener('touchmove', function(evt) {
-            this.handleTouchMove(evt).bind(this);
+            this.handleTouchMove(evt);
         }.bind(this), false);
     }
 }
