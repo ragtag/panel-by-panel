@@ -30,10 +30,19 @@ class PanelByPanel {
 	this.artist.focus();
 	this.artist.setTitle();
 	this.artist.hideMenu(menuDelay);
+	let self = this;
 	window.onresize = function() { self.artist.focus() }
+	window.addEventListener("popstate", function(e) {
+	    // TODO! This requires two clicks on the back button, after the first one.
+	    let url = new URL(window.location.href);
+	    let p = parseInt(url.searchParams.get("page"));
+	    if (!isNaN(p)) {
+		self.comic.goto(p);
+		self.artist.focus();
+	    }
+	});
 
 	// Enable navigation
-	let self = this;
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('menubtn').onclick = function() { self.menu() }
