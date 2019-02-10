@@ -3,6 +3,7 @@
     "author": "Ragnar B,",
     "home": "lab/index.html",
     "exit": "index.html",
+    "background": "white",
     "pages": [
 	{
 	    "image": "images/uv-1.jpg",
@@ -41,6 +42,7 @@
 	},
 	{
 	    "image": "images/uv-2.jpg",
+	    "background": "#a4dee8",
 	    "panels": [
 		{
 		    "height": 40,
@@ -77,6 +79,7 @@
 	},
 	{
 	    "image": "images/uv-3.jpg",
+	    "background": "#bea5ea",
 	    "panels": [
 		{
 		    "height": 40,
@@ -113,6 +116,7 @@
 	},
 	{
 	    "image": "images/uv-4.jpg",
+	    "background": "#f5f5f5",
 	    "panels": [
 		{
 		    "height": 40,

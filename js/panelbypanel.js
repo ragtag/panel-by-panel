@@ -29,6 +29,7 @@ class PanelByPanel {
 	this.artist = new Draw(this.comic);
 	this.artist.focus();
 	this.artist.setTitle();
+	this.artist.setBackground();
 	this.artist.hideMenu(menuDelay);
 	let self = this;
 	window.onresize = function() { self.artist.focus() }
@@ -232,12 +233,26 @@ class Draw {
     flip() {
 	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
 	this.setTitle();
+	this.setBackground();
     }
     
     setTitle() {
 	let p = this.comic.currentPage + 1;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
 	window.history.pushState("", "", '/index.html?page=' + p);
+    }
+
+    setBackground() {
+	let p = this.comic.currentPage;
+	let color = document.body.style.backgroundColor;
+	if ( this.comic.pages[p].background != null ) {
+	    color = this.comic.pages[p].background;
+	} else {
+	    if ( this.comic.background != null ) {
+		color = this.comic.background;
+	    }
+	}
+	document.body.style.backgroundColor = color;
     }
     
     focus() {
@@ -332,6 +347,8 @@ class Comic {
 	this.pages = conf.pages;
 	this.home = conf.home;
 	this.exit = conf.exit;
+	this.missing = conf.missing;
+	this.background = conf.background;
     }
 
     next() {
