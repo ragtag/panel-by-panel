@@ -27,14 +27,12 @@ class PanelByPanel {
 
 	// Draw the page
 	this.artist = new Draw(this.comic);
+	this.artist.storeHistory();
 	this.artist.focus();
-	this.artist.setTitle();
-	this.artist.setBackground();
 	this.artist.hideMenu(menuDelay);
 	let self = this;
 	window.onresize = function() { self.artist.focus() }
 	window.addEventListener("popstate", function(e) {
-	    // TODO! This requires two clicks on the back button, after the first one.
 	    let url = new URL(window.location.href);
 	    let p = parseInt(url.searchParams.get("page"));
 	    if (!isNaN(p)) {
@@ -74,9 +72,14 @@ class PanelByPanel {
 
     next() {
 	if (this.panelMode) {
+	    let page = this.comic.currentPage;
 	    this.comic.next();
+	    if (page != this.comic.currentPage) {
+		this.artist.storeHistory();
+	    }
 	} else {
 	    this.comic.goto(this.comic.currentPage + 2);
+	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
 	this.artist.focus();
@@ -84,9 +87,14 @@ class PanelByPanel {
 
     prev() {
 	if (this.panelMode) {
+	    let page = this.comic.currentPage;
 	    this.comic.prev();
+	    if (page != this.comic.currentPage) {
+		this.artist.storeHistory();
+	    }
 	} else {
 	    this.comic.goto(this.comic.currentPage);
+	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
 	this.artist.focus();
@@ -105,6 +113,7 @@ class PanelByPanel {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
 	    this.comic.goto(this.comic.currentPage + 1);
+	    this.artist.storeHistory();
 	    this.artist.focus();
 	} else {
 	    this.panelMode = true;
@@ -126,14 +135,14 @@ class PanelByPanel {
 		break;
 	    case 34: // Page Down
 		self.comic.goto(self.comic.currentPage + 2);
+		self.artist.storeHistory();
 		self.artist.focus();
-		self.artist.setTitle();
 		self.comic.preload();
 		break;
 	    case 33: // Page Up
 		self.comic.goto(self.comic.currentPage);
+		self.artist.storeHistory();
 		self.artist.focus();
-		self.artist.setTitle();
 		self.comic.preload();
 		break;
 	    default:
@@ -246,6 +255,10 @@ class Draw {
     setTitle() {
 	let p = this.comic.currentPage + 1;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
+    }
+
+    storeHistory() {
+	let p = this.comic.currentPage + 1;
 	let url = new URL(window.location.href);
 	window.history.pushState("", "", url.pathname+'?page=' + p);
     }
