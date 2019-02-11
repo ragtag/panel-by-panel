@@ -59,7 +59,6 @@ class PanelByPanel {
 	if ( this.artist.viewportWidth < pbpMaxWidth || this.artist.viewportHeight < pbpMaxHeight ) {
 	    this.panelMode = false;
 	    this.togglePanelMode(); // Makes it true
-	    console.log(this.panelMode);
 	}
 	if (debug) {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
@@ -248,7 +247,6 @@ class Draw {
 	let p = this.comic.currentPage + 1;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
 	let url = new URL(window.location.href);
-	console.log(url.pathname);
 	window.history.pushState("", "", url.pathname+'?page=' + p);
     }
 
