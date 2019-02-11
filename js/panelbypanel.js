@@ -247,7 +247,9 @@ class Draw {
     setTitle() {
 	let p = this.comic.currentPage + 1;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
-	window.history.pushState("", "", '/index.html?page=' + p);
+	let url = new URL(window.location.href);
+	console.log(url.pathname);
+	window.history.pushState("", "", url.pathname+'?page=' + p);
     }
 
     setBackground() {
