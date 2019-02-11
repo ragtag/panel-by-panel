@@ -20,6 +20,13 @@ nav, #container, #pagecontainer {
     z-index: 0;
 }
 
+#page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+}
+
 #fallback {
     position: absolute;
     width: 50%;
