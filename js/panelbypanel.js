@@ -16,7 +16,7 @@ class PanelByPanel {
     constructor(comic) {
 	this.comic = comic;
 	this.currentPage;
-	this.panelMode = true;
+	this.panelMode = false;
 
 	// Go to specific page directly
 	let url = new URL(window.location.href);
@@ -44,18 +44,22 @@ class PanelByPanel {
 	});
 
 	// Enable navigation
-	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
+	document.getElementById('prevbtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('menubtn').onclick = function() { self.menu() }
+	document.getElementById('menubtn').addEventListener('click', function(event){ self.dont(event); })
+	document.getElementById('nextbtn').onclick = function() { self.next() }
+	document.getElementById('nextbtn').addEventListener('click', function(event){ self.dont(event); })
 	this.panelButton = document.getElementById('pbpbtn');
 	this.panelButton.onclick = function() { self.togglePanelMode() }
 	this.keyboardNav();
 	this.touchNav();
 
 	// Set panel-by-panel navigation, based on ppi and window size
-	if ( this.artist.viewportWidth > pbpMaxWidth && this.artist.viewportHeight > pbpMaxHeight ) {
-	    this.panelMode = true;
-	    this.togglePanelMode();
+	if ( this.artist.viewportWidth < pbpMaxWidth || this.artist.viewportHeight < pbpMaxHeight ) {
+	    this.panelMode = false;
+	    this.togglePanelMode(); // Makes it true
+	    console.log(this.panelMode);
 	}
 	if (debug) {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
@@ -63,6 +67,10 @@ class PanelByPanel {
 
 	// Preload the next/previous page
 	this.comic.preload();
+    }
+
+    dont(event) {
+	event.preventDefault();
     }
 
     next() {

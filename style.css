@@ -27,29 +27,6 @@ nav, #container, #pagecontainer {
     margin-right: -50%;
 }
 
-#fallback {
-    position: absolute;
-    width: 50%;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    padding: 25px;
-    z-index: 15;
-    background: rgba(254, 254, 254, 0.85);
-    border: 2px solid black;
-    border-radius: 15px;
-}
-
-#fallback h1 {
-    text-align: center;
-}
-
-#fallback p,ul {
-    font-size: 150%;
-}
-
-
 
 /* Main menu */
 
@@ -82,12 +59,12 @@ nav, #container, #pagecontainer {
     display: inline-block;
     margin: 0 auto;
     width: 34%;
+    text-align: center;
 }
-#menu-center button {
+#menu-center a {
     margin-left: auto;
     margin-right: auto;
-    display: block;
-    opacity: 1;
+    opacity: 0.5;
 }
 
 #menu-right {
@@ -108,11 +85,12 @@ nav {
     height: 100%;
     width: 35%;
     float: left;
-    opacity: 0;
+    opacity: 0.2;
     border: 0;
 }    
 
 #prevbtn {
+    background: green;
 }
 
 #menubtn {
@@ -120,5 +98,6 @@ nav {
 }
 
 #nextbtn {
+    background: red;
 }
 
