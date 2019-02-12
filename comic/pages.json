@@ -6,7 +6,7 @@
     "background": "white",
     "pages": [
 	{
-	    "image": "images/uv-1.jpg",
+	    "image": "comic/uv-1.jpg",
 	    "panels": [
 		{
 		    "height": 40,
@@ -41,7 +41,7 @@
 	    ]
 	},
 	{
-	    "image": "images/uv-2.jpg",
+	    "image": "comic/uv-2.jpg",
 	    "background": "#a4dee8",
 	    "panels": [
 		{
@@ -78,7 +78,7 @@
 	    ]
 	},
 	{
-	    "image": "images/uv-3.jpg",
+	    "image": "comic/uv-3.jpg",
 	    "background": "#bea5ea",
 	    "panels": [
 		{
@@ -115,7 +115,7 @@
 	    ]
 	},
 	{
-	    "image": "images/uv-4.jpg",
+	    "image": "comic/uv-4.jpg",
 	    "background": "#f5f5f5",
 	    "panels": [
 		{

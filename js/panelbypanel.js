@@ -338,7 +338,7 @@ class Comic {
 	request.addEventListener("load", this.transferComplete);
 	request.addEventListener("error", this.transferFailed);
 	request.addEventListener("abort", this.transferCanceled);
-	request.open("GET", "./images/pages.json", true);
+	request.open("GET", "./comic/pages.json", true);
 	request.send();
     }
 
