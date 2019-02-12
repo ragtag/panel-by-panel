@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>Comics Reader</title>
+    <?php require "panel-by-panel.php" ?>
     <link rel="stylesheet" href="style.css">
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
     <script type="text/javascript" src="js/anime.min.js"></script>
