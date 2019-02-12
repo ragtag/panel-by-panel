@@ -44,12 +44,6 @@ nav, #container, #pagecontainer {
     /* filter: brightness(1) sepia(1) saturate(17) hue-rotate(0deg); */
 }
 
-.menu-button {
-    border: none;
-    outline: none;
-    background: none;
-}
-
 #menu-left {
     float: left;
     width: 33%;
@@ -71,7 +65,7 @@ nav, #container, #pagecontainer {
     float: right;
     width: 33%;
 }
-#menu-right img {
+#menu-right a {
     float: right;
 }
 

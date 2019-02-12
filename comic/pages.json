@@ -1,8 +1,8 @@
 {
     "title": "The Story of UV",
     "author": "Ragnar B,",
-    "home": "lab/index.html",
-    "exit": "index.html",
+    "home": "https://github.com/ragtag/panel-by-panel",
+    "exit": "index.php",
     "background": "white",
     "pages": [
 	{

@@ -13,17 +13,17 @@
   <body>
     <div id="container">
       <nav>
-	<a href="index.html?page=4" class="navbtn" id="prevbtn"></a>
-	<a href="index.html?page=2" class="navbtn" id="menubtn"></a>
-	<a href="index.html?page=1" class="navbtn" id="nextbtn"></a>
+	<a href="<?php echo $prev_page ?>" class="navbtn" id="prevbtn"></a>
+	<a href="#" class="navbtn" id="menubtn"></a>
+	<a href="<?php echo $next_page ?>" class="navbtn" id="nextbtn"></a>
 	<div id="menu">
 	  <div id="menu-left">
-	    <a href="https://github.com/ragtag/panel-by-panel">
+	    <a href="<?php echo $home ?>">
 	      <img src="images/back.svg" />
 	    </a>
 	  </div>
 	  <div id="menu-center">
-	    <a href="#" class="menu-button" id="pbpbtn">
+	    <a href="#" id="pbpbtn">
 	      <img src="images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
 	    </a>
 	  </div>
@@ -36,7 +36,7 @@
       </nav>
     </div>
     <div id="pagecontainer">
-      <img src="comic/uv-1.jpg"
+      <img src="<?php echo $image ?>"
 	   id="page"
 	   style="transform: translate(-50%, -50%);" />
     </div>
