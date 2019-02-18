@@ -22,7 +22,7 @@ class PanelByPanel {
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
 	if (!isNaN(p)) {
-	    this.comic.goto(p);
+	    this.comic.gotoPage(p);
 	}
 
 	// Draw the page
@@ -36,7 +36,7 @@ class PanelByPanel {
 	    let url = new URL(window.location.href);
 	    let p = parseInt(url.searchParams.get("page"));
 	    if (!isNaN(p)) {
-		self.comic.goto(p);
+		self.comic.gotoPage(p);
 		self.artist.focus();
 	    }
 	});
@@ -78,7 +78,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.goto(this.comic.currentPage + 2);
+	    this.comic.gotoPage(this.comic.currentPage + 2);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -93,7 +93,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.goto(this.comic.currentPage);
+	    this.comic.gotoPage(this.comic.currentPage);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -112,7 +112,7 @@ class PanelByPanel {
 	if (this.panelMode == true) {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
-	    this.comic.goto(this.comic.currentPage + 1);
+	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
 	    this.artist.focus();
 	} else {
@@ -134,13 +134,13 @@ class PanelByPanel {
 		self.next();
 		break;
 	    case 34: // Page Down
-		self.comic.goto(self.comic.currentPage + 2);
+		self.comic.gotoPage(self.comic.currentPage + 2);
 		self.artist.storeHistory();
 		self.artist.focus();
 		self.comic.preload();
 		break;
 	    case 33: // Page Up
-		self.comic.goto(self.comic.currentPage);
+		self.comic.gotoPage(self.comic.currentPage);
 		self.artist.storeHistory();
 		self.artist.focus();
 		self.comic.preload();
@@ -402,7 +402,7 @@ class Comic {
 	}
     }
 
-    goto(page) {
+    gotoPage(page) {
 	this.currentPage = page - 1;
 	this.currentPanel = -1;
 	if (this.currentPage < 0) {
