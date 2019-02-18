@@ -332,13 +332,16 @@ class Draw {
 
 class Comic {
     constructor(request) {
+	let url = new URL(window.location.href);
+	this.name = url.searchParams.get('comic') || "comic";
+	this.url = "./" + this.name + "/" + this.name + ".json";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);
 	request.addEventListener("load", this.transferComplete);
 	request.addEventListener("error", this.transferFailed);
 	request.addEventListener("abort", this.transferCanceled);
-	request.open("GET", "./comic/pages.json", true);
+	request.open("GET", this.url, true);
 	request.send();
     }
 
