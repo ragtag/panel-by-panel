@@ -22,6 +22,11 @@
       <frame points="77,1367 1281,1375 1281,1640 77,1637"/>
       <frame points="133,1652 1219,1656 1219,1948 131,1946"/>
     </page>
+    <page>
+      <image href="comic/uv-3.jpg"/>
+      <frame points="1,1 1,512 512,512 512,1"/>
+      <frame points="513,1 1024,1 1024,513 513,513"/>
+    </page>
   </body>
 </ACBF>
 

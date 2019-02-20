@@ -387,10 +387,7 @@ class Comic {
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
 	this.proportions();
-	console.log(this.acbf.ACBF.body.page.length);
-	console.log(this.acbf.ACBF.body.page[0].image["@attributes"].href);
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
-	    console.log('.o.');
 	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
 	}
 	console.log(dom);
@@ -411,7 +408,6 @@ class Comic {
     parsePanels(frames) {
 	let panel = { x: 50, y: 50, width: 100, height: 100 };
 	let pairs = frames["@attributes"].points.split(" ");
-	console.log(pairs);
 	let min = { "x": 0, "y": 0 };
 	let max = { "x": 100, "y": 100 };
 	for (let i = 0; i < pairs.length; i++) {
@@ -488,8 +484,8 @@ class Comic {
     next() {
 	this.currentPanel++;
 	if (this.currentPanel >= this.pages[this.currentPage].panels.length) {
-	    this.currentPanel = -1;
 	    this.currentPage++;
+	    this.currentPanel = -1;
 	    if (this.currentPage >= this.pages.length) {
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
@@ -503,8 +499,8 @@ class Comic {
     prev() {
 	this.currentPanel--;
 	if (this.currentPanel < -1) {
-	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    this.currentPage--;
+	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    if (this.currentPage < 0) {
 		this.currentPage = 0;
 		this.currentPanel = -1;
