@@ -78,7 +78,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.gotoPage(this.comic.currentPage + 2);
+	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -93,7 +93,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.gotoPage(this.comic.currentPage);
+	    this.comic.gotoPage(this.comic.currentPage - 1);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -112,7 +112,7 @@ class PanelByPanel {
 	if (this.panelMode == true) {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
-	    this.comic.gotoPage(this.comic.currentPage + 1);
+	    // this.comic.gotoPage(this.comic.currentPage);
 	    this.artist.storeHistory();
 	    this.artist.focus();
 	} else {
@@ -222,7 +222,7 @@ class Swipe {
 class Draw {
     constructor(comic) {
 	this.comic = comic;
-	this.drawnPage = 0;
+	this.drawnPage = -1;
 	this.drawnPanel = -1;
 	this.getViewportSize();
 	this.getImageSize();
@@ -258,7 +258,7 @@ class Draw {
     }
 
     storeHistory() {
-	let p = this.comic.currentPage + 1;
+	let p = this.comic.currentPage;
 	let url = new URL(window.location.href);
 	window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
     }
@@ -388,7 +388,7 @@ class Comic {
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
 	this.proportions();
-	// TODO! this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
+	this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
 	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
 	}
@@ -398,10 +398,14 @@ class Comic {
 
     parsePage(page) {
 	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
+		    "background": null,
 		    "panels": []
 		  };
-	if (page.frame == 'undefined') {
-	    obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
+	if (page["@attributes"] != undefined) {
+	    obj.background = page["@attributes"].bgcolor || null;
+	}
+	if (page.frame == undefined) {
+	    // obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
 	} else {
 	    for (let f = 0; f < page.frame.length; f++) {
 		let panel = { x: 50, y: 50, width: 100, height: 100 };
@@ -510,7 +514,7 @@ class Comic {
     }
 
     gotoPage(page) {
-	this.currentPage = page - 1;
+	this.currentPage = page;
 	this.currentPanel = -1;
 	if (this.currentPage < 0) {
 	    window.location.href = this.home;
