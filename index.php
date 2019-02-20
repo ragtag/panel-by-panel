@@ -36,7 +36,7 @@
       </nav>
     </div>
     <div id="pagecontainer">
-      <img src="<?php echo $image ?>"
+      <img src="<?php echo $image ?>comic/uv-1.jpg"
 	   id="page"
 	   style="transform: translate(-50%, -50%);" />
     </div>

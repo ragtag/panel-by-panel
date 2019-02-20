@@ -411,22 +411,36 @@ class Comic {
     parsePanels(frames) {
 	let panel = { x: 50, y: 50, width: 100, height: 100 };
 	let pairs = frames["@attributes"].points.split(" ");
-	let xmin = 0;
-	let xmax = 100;
-	let ymin = 0;
-	let ymax = 100;
+	console.log(pairs);
+	let min = { "x": 0, "y": 0 };
+	let max = { "x": 100, "y": 100 };
 	for (let i = 0; i < pairs.length; i++) {
 	    let xy = pairs[i].split(",");
-	    let x = parseFloat(xy[0]);
-	    let y = parseFloat(xy[1]);
-	    
+	    let x = parseFloat(xy[0]) * this.prop.x;
+	    let y = parseFloat(xy[1]) * this.prop.y;
+	    if (x > min['x']) min['x'] = x;
+	    if (y > min['y']) min['y'] = y;
+	    if (x < max['x']) max['x'] = x;
+	    if (y < max['y']) max['y'] = y;
+	    panel['minx'] = min.x;
+	    panel['maxx'] = max.x;
+	    panel['x'] = (min.x + max.x) / 2;
+	    panel['y'] = (min.y + max.y) / 2;
+	    panel['width'] = min.x - max.x;
+	    panel['height'] = min.y - max.y;
 	}
 	return panel;
     }
 
     proportions() {
-	this.propX = 100 / document.getElementById('page').naturalWidth;
-	this.propY = 100 / document.getElementById('page').naturalHeight;
+	this.prop = {
+	    "x": 100 / document.getElementById('page').naturalWidth,
+	    "y": 100 / document.getElementById('page').naturalHeight
+	};
+	console.log("Proportions X: " + this.prop.x);
+	console.log("Proportions Y: " + this.prop.y);
+	console.log("Image width: " + document.getElementById('page').naturalWidth);
+	console.log("Image height: " + document.getElementById('page').naturalHeight);
     }
 
     // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
