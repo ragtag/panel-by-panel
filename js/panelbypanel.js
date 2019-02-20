@@ -382,16 +382,17 @@ class Comic {
 	}
 	catch (e) { dom = null; }
 	this.acbf = this.xmlToJson(dom);
+	console.log(this.acbf);
 	// TODO! Missing language information, and may break if only one language is used.
 	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0];
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
 	this.proportions();
+	// TODO! this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
 	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
 	}
 	console.log(dom);
-	console.log(this.acbf);
 	console.log(this);
     }
 
@@ -399,33 +400,33 @@ class Comic {
 	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
 		    "panels": []
 		  };
-	for (let f = 0; f < page.frame.length; f++) {
-	    obj.panels.push(this.parsePanels(page.frame[f]));
+	if (page.frame == 'undefined') {
+	    obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
+	} else {
+	    for (let f = 0; f < page.frame.length; f++) {
+		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		let pairs = page.frame[f]["@attributes"].points.split(" ");
+		let min = { "x": 0, "y": 0 };
+		let max = { "x": 100, "y": 100 };
+		for (let i = 0; i < pairs.length; i++) {
+		    let xy = pairs[i].split(",");
+		    let x = parseFloat(xy[0]) * this.prop.x;
+		    let y = parseFloat(xy[1]) * this.prop.y;
+		    if (x > min['x']) min['x'] = x;
+		    if (y > min['y']) min['y'] = y;
+		    if (x < max['x']) max['x'] = x;
+		    if (y < max['y']) max['y'] = y;
+		    panel['minx'] = min.x;
+		    panel['maxx'] = max.x;
+		    panel['x'] = (min.x + max.x) / 2;
+		    panel['y'] = (min.y + max.y) / 2;
+		    panel['width'] = min.x - max.x;
+		    panel['height'] = min.y - max.y;
+		}
+		obj.panels.push(panel);
+	    }
 	}
 	return obj;
-    }
-
-    parsePanels(frames) {
-	let panel = { x: 50, y: 50, width: 100, height: 100 };
-	let pairs = frames["@attributes"].points.split(" ");
-	let min = { "x": 0, "y": 0 };
-	let max = { "x": 100, "y": 100 };
-	for (let i = 0; i < pairs.length; i++) {
-	    let xy = pairs[i].split(",");
-	    let x = parseFloat(xy[0]) * this.prop.x;
-	    let y = parseFloat(xy[1]) * this.prop.y;
-	    if (x > min['x']) min['x'] = x;
-	    if (y > min['y']) min['y'] = y;
-	    if (x < max['x']) max['x'] = x;
-	    if (y < max['y']) max['y'] = y;
-	    panel['minx'] = min.x;
-	    panel['maxx'] = max.x;
-	    panel['x'] = (min.x + max.x) / 2;
-	    panel['y'] = (min.y + max.y) / 2;
-	    panel['width'] = min.x - max.x;
-	    panel['height'] = min.y - max.y;
-	}
-	return panel;
     }
 
     // TODO! Maybe redo this every page, to support different page sizes.
