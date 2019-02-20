@@ -1,8 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    /* You can optionally set the background color for each comic or page in the pages.json */
-    background: white;
+    /* Background color is controlled by the ACBF on a per comic and or page basis */
 }
 
 /* Layout */
