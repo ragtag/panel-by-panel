@@ -260,7 +260,7 @@ class Draw {
     storeHistory() {
 	let p = this.comic.currentPage + 1;
 	let url = new URL(window.location.href);
-	window.history.pushState("", "", url.pathname+'?page=' + p);
+	window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
     }
 
     setBackground() {
@@ -335,7 +335,6 @@ class Comic {
 	let url = new URL(window.location.href);
 	this.name = url.searchParams.get('comic') || "comic";
 	this.url = "./" + this.name + "/" + this.name + ".acbf";
-	//this.url = "./" + this.name + "/" + "AndasGame" + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);
@@ -383,7 +382,8 @@ class Comic {
 	}
 	catch (e) { dom = null; }
 	this.acbf = this.xmlToJson(dom);
-	this.title = this.acbf.ACBF["meta-data"]["book-title"];
+	// TODO! Missing language information, and may break if only one language is used.
+	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0];
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
 	this.proportions();
@@ -396,7 +396,7 @@ class Comic {
     }
 
     parsePage(page) {
-	let obj = { "image": page.image["@attributes"].href,
+	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
 		    "panels": []
 		  };
 	for (let f = 0; f < page.frame.length; f++) {
@@ -428,15 +428,12 @@ class Comic {
 	return panel;
     }
 
+    // TODO! Maybe redo this every page, to support different page sizes.
     proportions() {
 	this.prop = {
 	    "x": 100 / document.getElementById('page').naturalWidth,
 	    "y": 100 / document.getElementById('page').naturalHeight
 	};
-	console.log("Proportions X: " + this.prop.x);
-	console.log("Proportions Y: " + this.prop.y);
-	console.log("Image width: " + document.getElementById('page').naturalWidth);
-	console.log("Image height: " + document.getElementById('page').naturalHeight);
     }
 
     // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
