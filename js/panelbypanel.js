@@ -334,7 +334,8 @@ class Comic {
     constructor(request) {
 	let url = new URL(window.location.href);
 	this.name = url.searchParams.get('comic') || "comic";
-	this.url = "./" + this.name + "/" + this.name + ".json";
+	this.url = "./" + this.name + "/" + this.name + ".acbf";
+	//this.url = "./" + this.name + "/" + "AndasGame" + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);
@@ -373,6 +374,101 @@ class Comic {
 	this.exit = conf.exit;
 	this.missing = conf.missing;
 	this.background = conf.background;
+    }
+
+    parseACBF(acbf) {
+	var dom = null
+	try {
+	    dom = new DOMParser().parseFromString(acbf, "text/xml");
+	}
+	catch (e) { dom = null; }
+	this.acbf = this.xmlToJson(dom);
+	this.title = this.acbf.ACBF["meta-data"]["book-title"];
+	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
+	this.pages = [];
+	this.proportions();
+	console.log(this.acbf.ACBF.body.page.length);
+	console.log(this.acbf.ACBF.body.page[0].image["@attributes"].href);
+	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
+	    console.log('.o.');
+	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
+	}
+	console.log(dom);
+	console.log(this.acbf);
+	console.log(this);
+    }
+
+    parsePage(page) {
+	let obj = { "image": page.image["@attributes"].href,
+		    "panels": []
+		  };
+	for (let f = 0; f < page.frame.length; f++) {
+	    obj.panels.push(this.parsePanels(page.frame[f]));
+	}
+	return obj;
+    }
+
+    parsePanels(frames) {
+	let panel = { x: 50, y: 50, width: 100, height: 100 };
+	let pairs = frames["@attributes"].points.split(" ");
+	let xmin = 0;
+	let xmax = 100;
+	let ymin = 0;
+	let ymax = 100;
+	for (let i = 0; i < pairs.length; i++) {
+	    let xy = pairs[i].split(",");
+	    let x = parseFloat(xy[0]);
+	    let y = parseFloat(xy[1]);
+	    
+	}
+	return panel;
+    }
+
+    proportions() {
+	this.propX = 100 / document.getElementById('page').naturalWidth;
+	this.propY = 100 / document.getElementById('page').naturalHeight;
+    }
+
+    // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+    // by demircancelebi https://gist.github.com/demircancelebi
+    xmlToJson(xml) {
+	// Create the return object
+	let obj = {};
+
+	if (xml.nodeType === 1) { // element
+	    // do attributes
+	    if (xml.attributes.length > 0) {
+		obj['@attributes'] = {};
+		for (let j = 0; j < xml.attributes.length; j += 1) {
+		    const attribute = xml.attributes.item(j);
+		    obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+		}
+	    }
+	} else if (xml.nodeType === 3) { // text
+	    obj = xml.nodeValue;
+	}
+	
+	// do children
+	// If just one text node inside
+	if (xml.hasChildNodes() && xml.childNodes.length === 1 && xml.childNodes[0].nodeType === 3) {
+	    obj = xml.childNodes[0].nodeValue;
+	} else if (xml.hasChildNodes()) {
+	    for (let i = 0; i < xml.childNodes.length; i += 1) {
+		const item = xml.childNodes.item(i);
+		const nodeName = item.nodeName;
+		if (typeof (obj[nodeName]) === 'undefined') {
+		    obj[nodeName] = this.xmlToJson(item);
+		} else {
+		    if (typeof (obj[nodeName].push) === 'undefined') {
+			const old = obj[nodeName];
+			obj[nodeName] = [];
+			obj[nodeName].push(old);
+		    }
+		    obj[nodeName].push(this.xmlToJson(item));
+		}
+	    }
+	}
+	return obj;
     }
 
     next() {
@@ -435,7 +531,7 @@ window.onload = function () {
     const comic = new Comic(request);
     request.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-	    comic.parseResponse(this.responseText);
+	    comic.parseACBF(this.responseText);
 	    const pbp = new PanelByPanel(comic);
 
 	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));
