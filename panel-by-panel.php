@@ -1,6 +1,6 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 // Get title
 $comic = 'comic';
@@ -25,41 +25,57 @@ $acbf_string = file_get_contents('./'.$comic.'/'.$comic.'.acbf');
 $acbf = new SimpleXMLElement($acbf_string);
 
 // Choose correct image to render
-if ($page == 0) {
-    $image = $comic."/".$acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
-} else {
-    $image = $comic."/".$acbf->body->page[$page-1]->image['href'];
+function get_image($comic, $page ,$acbf) {
+    if ($page == 0) {
+        $image = $comic."/".$acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
+    } else {
+        $image = $comic."/".$acbf->body->page[$page-1]->image['href'];
+    }
+    return $image;
 }
 
 // Title
-$title = $acbf->{'meta-data'}->{'book-info'}->{'book-title'}[0];
-$title = $title." - ".$page." of ".sizeof($acbf->body->page);
+function get_title($page, $acbf) {
+    $title = $acbf->{'meta-data'}->{'book-info'}->{'book-title'}[0];
+    $title = $title." - ".$page." of ".sizeof($acbf->body->page);
+    return $title;
+}
 
 // Background color
-if ($page == 0) {
-    if (isset($acbf->{'meta-data'}->{'book-info'}->coverpage['bgcolor'])) {
-        $background = $acbf->{'meta-data'}->{'book-info'}->coverpage['bgcolor'];
-    } else if (isset($acbf->body['bgcolor'])) {
-        $background = $acbf->body['bgcolor'];
+function get_bgcolor($page, $acbf) {
+    if ($page == 0) {
+        if (isset($acbf->{'meta-data'}->{'book-info'}->coverpage['bgcolor'])) {
+            $bgcolor = $acbf->{'meta-data'}->{'book-info'}->coverpage['bgcolor'];
+        } else if (isset($acbf->body['bgcolor'])) {
+            $bgcolor = $acbf->body['bgcolor'];
+        }
+    } else {
+        if (isset($acbf->body->page[$page-1]['bgcolor'])) {
+            $bgcolor = $acbf->body->page[$page-1]['bgcolor'];
+        } else if (isset($acbf->body['bgcolor'])) {
+            $bgcolor = $acbf->body['bgcolor'];
+        }        
     }
-} else {
-    if (isset($acbf->body->page[$page-1]['bgcolor'])) {
-        $background = $acbf->body->page[$page-1]['bgcolor'];
-    } else if (isset($acbf->body['bgcolor'])) {
-        $background = $acbf->body['bgcolor'];
-    }        
+    return $bgcolor;
 }
 
-// Basic navigation
-if ($page >= sizeof($acbf->body->page)) {
-  $next_page = "TODO! Exit";
-} else {
-  $next_page = "index.php?comic=".$comic."&page=" . ($page + 1);
+// Next page link
+function get_next($comic, $page, $acbf) {
+    if ($page >= sizeof($acbf->body->page)) {
+        $next_page = "TODO! Exit";
+    } else {
+        $next_page = "index.php?comic=".$comic."&page=" . ($page + 1);
+    }
+    return $next_page;
 }
 
-if ($page <= 0) {
-  $prev_page = "TODO! Home";
-} else {
-  $prev_page = "index.php?comic=".$comic."&page=" . ($page - 1);
+// Previous page link
+function get_prev($comic, $page, $acbf) {
+    if ($page <= 0) {
+        $prev_page = "TODO! Home";
+    } else {
+        $prev_page = "index.php?comic=".$comic."&page=" . ($page - 1);
+    }
+    return $prev_page;
 }
 ?>

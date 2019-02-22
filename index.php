@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <?php require "panel-by-panel.php" ?>
-    <title><?php echo $title ?> </title>
+    <title><?= get_title($page, $acbf) ?></title>
     <link rel="stylesheet" href="style.css">
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
     <script type="text/javascript" src="js/anime.min.js"></script>
     <script type="text/javascript" src="js/panelbypanel.js"></script>
   </head>
-  <body bgcolor="<?php echo $background ?>">
+  <body bgcolor="<?= get_bgcolor($page, $acbf) ?>">
     <div id="container">
       <nav>
-	<a href="<?php echo $prev_page ?>" class="navbtn" id="prevbtn"></a>
+	<a href="<?= get_prev($comic, $page, $acbf) ?>" class="navbtn" id="prevbtn"></a>
 	<a href="#" class="navbtn" id="menubtn"></a>
-	<a href="<?php echo $next_page ?>" class="navbtn" id="nextbtn"></a>
+	<a href="<?= get_next($comic, $page, $acbf) ?>" class="navbtn" id="nextbtn"></a>
 	<div id="menu">
 	  <div id="menu-left">
 	    <a href="<?php echo $home ?>">
@@ -36,7 +36,7 @@
       </nav>
     </div>
     <div id="pagecontainer">
-      <img src="<?php echo $image ?>"
+      <img src="<?= get_image($comic, $page, $acbf) ?>"
 	   id="page"
 	   style="transform: translate(-50%, -50%);" />
     </div>
