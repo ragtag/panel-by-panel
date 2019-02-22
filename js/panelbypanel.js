@@ -78,7 +78,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.gotoPage(this.comic.currentPage + 2);
+	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -93,7 +93,7 @@ class PanelByPanel {
 		this.artist.storeHistory();
 	    }
 	} else {
-	    this.comic.gotoPage(this.comic.currentPage);
+	    this.comic.gotoPage(this.comic.currentPage - 1);
 	    this.artist.storeHistory();
 	}
 	this.artist.hideMenu();
@@ -112,7 +112,7 @@ class PanelByPanel {
 	if (this.panelMode == true) {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
-	    this.comic.gotoPage(this.comic.currentPage + 1);
+	    // this.comic.gotoPage(this.comic.currentPage);
 	    this.artist.storeHistory();
 	    this.artist.focus();
 	} else {
@@ -222,7 +222,7 @@ class Swipe {
 class Draw {
     constructor(comic) {
 	this.comic = comic;
-	this.drawnPage = 0;
+	this.drawnPage = -1;
 	this.drawnPanel = -1;
 	this.getViewportSize();
 	this.getImageSize();
@@ -258,9 +258,9 @@ class Draw {
     }
 
     storeHistory() {
-	let p = this.comic.currentPage + 1;
+	let p = this.comic.currentPage;
 	let url = new URL(window.location.href);
-	window.history.pushState("", "", url.pathname+'?page=' + p);
+	window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
     }
 
     setBackground() {
@@ -334,7 +334,7 @@ class Comic {
     constructor(request) {
 	let url = new URL(window.location.href);
 	this.name = url.searchParams.get('comic') || "comic";
-	this.url = "./" + this.name + "/" + this.name + ".json";
+	this.url = "./" + this.name + "/" + this.name + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);
@@ -375,11 +375,119 @@ class Comic {
 	this.background = conf.background;
     }
 
+    parseACBF(acbf) {
+	var dom = null
+	try {
+	    dom = new DOMParser().parseFromString(acbf, "text/xml");
+	}
+	catch (e) { dom = null; }
+	this.acbf = this.xmlToJson(dom);
+	console.log(this.acbf);
+	// TODO! Missing language information, and may break if only one language is used.
+	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0];
+	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
+	this.pages = [];
+	this.proportions();
+	this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
+	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
+	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
+	}
+	console.log(dom);
+	console.log(this);
+    }
+
+    parsePage(page) {
+	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
+		    "background": null,
+		    "panels": []
+		  };
+	if (page["@attributes"] != undefined) {
+	    obj.background = page["@attributes"].bgcolor || null;
+	}
+	if (page.frame == undefined) {
+	    // obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
+	} else {
+	    for (let f = 0; f < page.frame.length; f++) {
+		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		let pairs = page.frame[f]["@attributes"].points.split(" ");
+		let min = { "x": 0, "y": 0 };
+		let max = { "x": 100, "y": 100 };
+		for (let i = 0; i < pairs.length; i++) {
+		    let xy = pairs[i].split(",");
+		    let x = parseFloat(xy[0]) * this.prop.x;
+		    let y = parseFloat(xy[1]) * this.prop.y;
+		    if (x > min['x']) min['x'] = x;
+		    if (y > min['y']) min['y'] = y;
+		    if (x < max['x']) max['x'] = x;
+		    if (y < max['y']) max['y'] = y;
+		    panel['minx'] = min.x;
+		    panel['maxx'] = max.x;
+		    panel['x'] = (min.x + max.x) / 2;
+		    panel['y'] = (min.y + max.y) / 2;
+		    panel['width'] = min.x - max.x;
+		    panel['height'] = min.y - max.y;
+		}
+		obj.panels.push(panel);
+	    }
+	}
+	return obj;
+    }
+
+    // TODO! Maybe redo this every page, to support different page sizes.
+    proportions() {
+	this.prop = {
+	    "x": 100 / document.getElementById('page').naturalWidth,
+	    "y": 100 / document.getElementById('page').naturalHeight
+	};
+    }
+
+    // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+    // by demircancelebi https://gist.github.com/demircancelebi
+    xmlToJson(xml) {
+	// Create the return object
+	let obj = {};
+
+	if (xml.nodeType === 1) { // element
+	    // do attributes
+	    if (xml.attributes.length > 0) {
+		obj['@attributes'] = {};
+		for (let j = 0; j < xml.attributes.length; j += 1) {
+		    const attribute = xml.attributes.item(j);
+		    obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+		}
+	    }
+	} else if (xml.nodeType === 3) { // text
+	    obj = xml.nodeValue;
+	}
+	
+	// do children
+	// If just one text node inside
+	if (xml.hasChildNodes() && xml.childNodes.length === 1 && xml.childNodes[0].nodeType === 3) {
+	    obj = xml.childNodes[0].nodeValue;
+	} else if (xml.hasChildNodes()) {
+	    for (let i = 0; i < xml.childNodes.length; i += 1) {
+		const item = xml.childNodes.item(i);
+		const nodeName = item.nodeName;
+		if (typeof (obj[nodeName]) === 'undefined') {
+		    obj[nodeName] = this.xmlToJson(item);
+		} else {
+		    if (typeof (obj[nodeName].push) === 'undefined') {
+			const old = obj[nodeName];
+			obj[nodeName] = [];
+			obj[nodeName].push(old);
+		    }
+		    obj[nodeName].push(this.xmlToJson(item));
+		}
+	    }
+	}
+	return obj;
+    }
+
     next() {
 	this.currentPanel++;
 	if (this.currentPanel >= this.pages[this.currentPage].panels.length) {
-	    this.currentPanel = -1;
 	    this.currentPage++;
+	    this.currentPanel = -1;
 	    if (this.currentPage >= this.pages.length) {
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
@@ -393,8 +501,8 @@ class Comic {
     prev() {
 	this.currentPanel--;
 	if (this.currentPanel < -1) {
-	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    this.currentPage--;
+	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    if (this.currentPage < 0) {
 		this.currentPage = 0;
 		this.currentPanel = -1;
@@ -406,7 +514,7 @@ class Comic {
     }
 
     gotoPage(page) {
-	this.currentPage = page - 1;
+	this.currentPage = page;
 	this.currentPanel = -1;
 	if (this.currentPage < 0) {
 	    window.location.href = this.home;
@@ -435,7 +543,7 @@ window.onload = function () {
     const comic = new Comic(request);
     request.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-	    comic.parseResponse(this.responseText);
+	    comic.parseACBF(this.responseText);
 	    const pbp = new PanelByPanel(comic);
 
 	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));

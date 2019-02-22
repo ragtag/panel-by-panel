@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ACBF xmlns="http://www.fictionbook-lib.org/xml/acbf/1.1">
+  <meta-data>
+    <book-title>This is a Test!</book-title>
+    <coverpage>
+      <image href="00cover.jpg"/>
+    </coverpage>
+  </meta-data>
+  <body bgcolor="#000000">
+    <page>
+      <image href="comic/uv-1.jpg"/>
+      <frame points="1,1 1,512 512,512 512,1"/>
+      <frame points="513,1 1024,1 1024,513 513,513"/>
+    </page>
+    <page>
+      <image href="comic/uv-2.jpg"/>
+      <frame points="135,170 429,173 426,764 134,762"/>
+      <frame points="438,173 996,173 990,767 438,761"/>
+      <frame points="1008,175 1011,174 1104,174 1108,172 1114,171 1108,155 1111,149 1115,152 1124,164 1129,161 1133,167 1161,167 1173,170 1179,168 1184,174 1199,169 1201,175 1226,176 1227,761 1215,755 1197,752 1179,749 1128,749 1107,752 1089,755 1074,761 1065,767 1005,767"/>
+      <frame points="60,764 855,767 861,1352 57,1346"/>
+      <frame points="876,767 1062,767 1071,761 1098,752 1128,749 1179,749 1203,752 1227,761 1242,767 1284,767 1284,1358 876,1355 876,767"/>
+      <frame points="77,1367 1281,1375 1281,1640 77,1637"/>
+      <frame points="133,1652 1219,1656 1219,1948 131,1946"/>
+    </page>
+    <page>
+      <image href="comic/uv-3.jpg"/>
+      <frame points="1,1 1,512 512,512 512,1"/>
+      <frame points="513,1 1024,1 1024,513 513,513"/>
+    </page>
+  </body>
+</ACBF>
+

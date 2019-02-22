@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>Comics Reader</title>
     <?php require "panel-by-panel.php" ?>
+    <title><?php echo $title ?> </title>
     <link rel="stylesheet" href="style.css">
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
     <script type="text/javascript" src="js/anime.min.js"></script>
     <script type="text/javascript" src="js/panelbypanel.js"></script>
   </head>
-  <body>
+  <body bgcolor="<?php echo $background ?>">
     <div id="container">
       <nav>
 	<a href="<?php echo $prev_page ?>" class="navbtn" id="prevbtn"></a>
