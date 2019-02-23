@@ -18,7 +18,7 @@
 	<a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
 	<div id="menu">
 	  <div id="menu-left">
-	    <a href="<?php echo $home ?>">
+	    <a href="<?= $pbp->get_home() ?>">
 	      <img src="images/back.svg" />
 	    </a>
 	  </div>
@@ -28,7 +28,7 @@
 	    </a>
 	  </div>
 	  <div id="menu-right">
-	    <a href="https://github.com/ragtag/panel-by-panel">
+	    <a href="<?= $pbp->get_thumbs() ?>">
 	      <img src="images/pages.svg" />
 	    </a>
 	  </div>

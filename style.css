@@ -94,3 +94,11 @@ nav {
     background: red;
 }
 
+/* Thumbnails */
+.thumblink {
+    text-decoration: none;
+}
+
+#active-thumb {
+    border: 1px dotted red;
+}
