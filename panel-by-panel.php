@@ -88,7 +88,7 @@ class PanelByPanel
     }
 
     public function get_thumbs() {
-        return "thumbs.php?comic=".$this->name."&page=".$this->page;
+        return "thumbs.php?comic=".$this->name."&page=".($this->page);
     }
 
     public function get_thumbs_bgcolor() {
