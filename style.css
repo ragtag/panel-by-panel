@@ -19,6 +19,10 @@ nav, #container, #pagecontainer {
     z-index: 0;
 }
 
+#container {
+    z-index: 1;
+}
+
 #page {
     position: absolute;
     top: 50%;
@@ -69,11 +73,6 @@ nav, #container, #pagecontainer {
 }
 
 /* Page Navigation */
-
-nav {
-    z-index: 1;
-}
-
 .navbtn {
     height: 100%;
     width: 35%;
