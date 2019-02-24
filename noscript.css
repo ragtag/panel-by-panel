@@ -1,11 +1,12 @@
 #menu {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    transition-delay: 1s;
+    transform: translateY(-64px);
+    transition: transform 0.3s ease-in-out;
+    transition-delay: 0s;
 }
 
-#menu:hover {
+#menuzone:hover #menu {
     opacity: 1;
+    transform: translateY(0px);
     transition-delay: 0s;
 }
 

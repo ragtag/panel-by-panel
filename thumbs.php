@@ -9,23 +9,6 @@
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
   </head>
   <body bgcolor="<?= $pbp->get_thumbs_bgcolor($page, $acbf) ?>">
-  <div id="menu">
-    <div id="menu-left">
-      <a href="<?= $pbp->get_home() ?>">
-	<img src="images/back.svg" />
-      </a>
-    </div>
-    <div id="menu-center">
-      <a href="#" id="pbpbtn">
-	<img src="images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
-      </a>
-    </div>
-    <div id="menu-right">
-      <a href="https://github.com/ragtag/panel-by-panel">
-	<img src="images/pages.svg" />
-      </a>
-    </div>
-  </div>
   <div id="thumbs">
     <?= $pbp->draw_thumbs() ?>
   </div>

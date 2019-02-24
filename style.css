@@ -6,7 +6,7 @@ body {
 
 /* Layout */
 
-nav, #container, #pagecontainer {
+#container, #pagecontainer {
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -21,6 +21,16 @@ nav, #container, #pagecontainer {
 
 #container {
     z-index: 1;
+}
+
+#menuzone {
+    opacity: 1;
+    width: 100vw;
+    height: 64px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 #page {
@@ -39,7 +49,7 @@ nav, #container, #pagecontainer {
     position: absolute;
     display: block;
     /* Set the color and opacity of the menu strip */
-    background: rgba(100, 100, 100, 1);
+    background: rgba(100, 100, 100, 0.7);
 }
 
 #menu img {

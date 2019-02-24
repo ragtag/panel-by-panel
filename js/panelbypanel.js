@@ -48,6 +48,7 @@ class PanelByPanel {
 	document.getElementById('menubtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('nextbtn').addEventListener('click', function(event){ self.dont(event); })
+	document.getElementById('menuzone').onmouseover = function() { self.artist.showMenu() }
 	this.panelButton = document.getElementById('pbpbtn');
 	this.panelButton.onclick = function() { self.togglePanelMode() }
 	this.keyboardNav();
@@ -248,7 +249,7 @@ class Draw {
 	let prev = this.comic.currentPage - 1
 	let next = this.comic.currentPage + 1
 	document.getElementById('prevbtn').href = 'index.php?comic='+this.comic.name+'&page='+prev;
-	document.getElementById('nextbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+next;
+	document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
     }
@@ -323,7 +324,7 @@ class Draw {
     showMenu() {
 	anime({
 	    targets: "#menu",
-	    translateY: "0",
+	    translateY: 0,
 	    duration: speed,
 	    easing: 'easeOutExpo',
 	    loop: false,

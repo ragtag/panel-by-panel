@@ -11,10 +11,7 @@
     <script type="text/javascript" src="js/panelbypanel.js"></script>
   </head>
   <body bgcolor="<?= $pbp->get_bgcolor() ?>">
-    <div id="container">
-      <a href="<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn"></a>
-      <a href="#" class="navbtn" id="menubtn"></a>
-      <a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
+    <div id="menuzone">
       <div id="menu">
 	<div id="menu-left">
 	  <a href="<?= $pbp->get_home() ?>" id="homebtn">
@@ -32,6 +29,11 @@
 	  </a>
 	</div>
       </div>
+    </div>
+    <div id="container">
+      <a href="<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn"></a>
+      <a href="#" class="navbtn" id="menubtn"></a>
+      <a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
     </div>
     <div id="pagecontainer">
       <img src="<?= $pbp->get_image() ?>"
