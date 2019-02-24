@@ -7,8 +7,6 @@
     <title><?= $pbp->get_title($page, $acbf) ?></title>
     <link rel="stylesheet" href="style.css">
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
-    <script type="text/javascript" src="js/anime.min.js"></script>
-    <script type="text/javascript" src="js/panelbypanel.js"></script>
   </head>
   <body bgcolor="<?= $pbp->get_thumbs_bgcolor($page, $acbf) ?>">
   <div id="menu">
