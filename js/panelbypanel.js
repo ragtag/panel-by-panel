@@ -112,8 +112,6 @@ class PanelByPanel {
 	if (this.panelMode == true) {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
-	    // this.comic.gotoPage(this.comic.currentPage);
-	    this.artist.storeHistory();
 	    this.artist.focus();
 	} else {
 	    this.panelMode = true;
@@ -134,16 +132,14 @@ class PanelByPanel {
 		self.next();
 		break;
 	    case 34: // Page Down
-		self.comic.gotoPage(self.comic.currentPage + 2);
+		self.comic.gotoPage(self.comic.currentPage + 1);
 		self.artist.storeHistory();
 		self.artist.focus();
-		self.comic.preload();
 		break;
 	    case 33: // Page Up
-		self.comic.gotoPage(self.comic.currentPage);
+		self.comic.gotoPage(self.comic.currentPage - 1);
 		self.artist.storeHistory();
 		self.artist.focus();
-		self.comic.preload();
 		break;
 	    default:
 	    }
@@ -248,12 +244,17 @@ class Draw {
 
     flip() {
 	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
+	document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
+	let prev = this.comic.currentPage - 1
+	let next = this.comic.currentPage + 1
+	document.getElementById('prevbtn').href = 'index.php?comic='+this.comic.name+'&page='+prev;
+	document.getElementById('nextbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
     }
     
     setTitle() {
-	let p = this.comic.currentPage + 1;
+	let p = this.comic.currentPage;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
     }
 
@@ -522,6 +523,7 @@ class Comic {
 	if (this.currentPage >= this.pages.length) {
 	    window.location.href = this.exit;
 	}
+	this.preload();
     }
     
     preload() {

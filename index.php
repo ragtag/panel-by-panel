@@ -18,7 +18,7 @@
 	<a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
 	<div id="menu">
 	  <div id="menu-left">
-	    <a href="<?= $pbp->get_home() ?>">
+	    <a href="<?= $pbp->get_home() ?>" id="homebtn">
 	      <img src="images/back.svg" />
 	    </a>
 	  </div>
@@ -28,7 +28,7 @@
 	    </a>
 	  </div>
 	  <div id="menu-right">
-	    <a href="<?= $pbp->get_thumbs() ?>">
+	    <a href="<?= $pbp->get_thumbs() ?>" id="thumbsbtn"">
 	      <img src="images/pages.svg" />
 	    </a>
 	  </div>
