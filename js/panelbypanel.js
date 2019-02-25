@@ -41,16 +41,21 @@ class PanelByPanel {
 	    }
 	});
 
-	// Enable navigation
+	// Top menu
+	document.getElementById('menuzone').onmouseover = function() { self.artist.showMenu() }
+	document.getElementById('aboutbtn').onclick = function() { self.artist.about() }
+	document.getElementById('about').onclick = function() { self.artist.hideMenu() }
+	document.getElementById('helpbtn').onclick = function() { self.artist.help() }
+	document.getElementById('help').onclick = function() { self.artist.hideMenu() }
+	this.panelButton = document.getElementById('pbpbtn');
+	this.panelButton.onclick = function() { self.togglePanelMode() }
+	// Page navigation
 	document.getElementById('prevbtn').onclick = function() { self.prev() }
 	document.getElementById('prevbtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('menubtn').onclick = function() { self.menu() }
 	document.getElementById('menubtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('nextbtn').onclick = function() { self.next() }
 	document.getElementById('nextbtn').addEventListener('click', function(event){ self.dont(event); })
-	document.getElementById('menuzone').onmouseover = function() { self.artist.showMenu() }
-	this.panelButton = document.getElementById('pbpbtn');
-	this.panelButton.onclick = function() { self.togglePanelMode() }
 	this.keyboardNav();
 	this.touchNav();
 
@@ -319,6 +324,8 @@ class Draw {
 	    easing: 'easeOutExpo',
 	    loop: false,
 	});
+	this.hideAbout();
+	this.hideHelp();
     }
 
     showMenu() {
@@ -330,6 +337,33 @@ class Draw {
 	    loop: false,
 	});
     }
+
+    about() {
+	let about = document.getElementById("about");
+	if (about.style.display == "none") {
+	    about.style.display = "block";
+	    this.hideHelp();
+	} else {
+	    about.style.display = "none";
+	}
+    }
+    hideAbout() {
+	document.getElementById("about").style.display = "none";
+    }
+
+    help() {
+	let help = document.getElementById("help");
+	if (help.style.display == "none") {
+	    this.hideAbout();
+	    help.style.display = "block";
+	} else {
+	    help.style.display = "none";
+	}
+    }
+    hideHelp() {
+	document.getElementById("help").style.display = "none";
+    }
+
 }
 
 class Comic {
