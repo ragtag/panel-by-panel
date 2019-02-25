@@ -22,7 +22,7 @@
 	  <a href="" id="aboutbtn" class="button">
 	    <img src="images/about.svg" alt="About this comic" />
 	  </a>
-	  <a href="" id="pbpbtn" class="button">
+	  <a href="#" id="pbpbtn" class="button">
 	    <img src="images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
 	  </a>
 	  <a href="" id="helpbtn" class="button">

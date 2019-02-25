@@ -320,7 +320,7 @@ class Draw {
     hideMenu(delay=0) {
 	anime({
 	    targets: "#menu",
-	    translateY: "-64px",
+	    translateY: "-48px",
 	    duration: speed,
 	    delay: delay,
 	    easing: 'easeOutExpo',
