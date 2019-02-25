@@ -44,8 +44,10 @@ class PanelByPanel {
 	// Top menu
 	document.getElementById('menuzone').onmouseover = function() { self.artist.showMenu() }
 	document.getElementById('aboutbtn').onclick = function() { self.artist.about() }
+	document.getElementById('aboutbtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('about').onclick = function() { self.artist.hideMenu() }
 	document.getElementById('helpbtn').onclick = function() { self.artist.help() }
+	document.getElementById('helpbtn').addEventListener('click', function(event){ self.dont(event); })
 	document.getElementById('help').onclick = function() { self.artist.hideMenu() }
 	this.panelButton = document.getElementById('pbpbtn');
 	this.panelButton.onclick = function() { self.togglePanelMode() }

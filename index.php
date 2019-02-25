@@ -19,13 +19,13 @@
 	  </a>
 	</div>
 	<div id="menu-center">
-	  <a href="#" id="aboutbtn" class="button">
+	  <a href="" id="aboutbtn" class="button">
 	    <img src="images/about.svg" alt="About this comic" />
 	  </a>
-	  <a href="#" id="pbpbtn" class="button">
+	  <a href="" id="pbpbtn" class="button">
 	    <img src="images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
 	  </a>
-	  <a href="#" id="helpbtn" class="button">
+	  <a href="" id="helpbtn" class="button">
 	    <img src="images/help.svg" alt="Help" />
 	  </a>
 	</div>
@@ -38,21 +38,25 @@
     </div>
     <div id="bubble-container">
     <div id="help" class="bubble">
-      <h3>Flipping Between Panels</h3>
-      <ul>
-	<li>Click the sides of the screen</li>
-	<li>Swipe left or right</li>
-	<li>Use the arrow keys</li>
+      <div id="help-inner">
+	<h3>Flipping Between Panels</h3>
+	<ul>
+	  <li>Click the sides of the screen</li>
+	  <li>Swipe left or right</li>
+	  <li>Use the arrow keys</li>
 	</ul>
-      <h3>Flipping Between Pages</h3>
-      <ul>
-	<li>Use Page Up/Down</li>
-	<li>Disable the Panel by Panel mode in the top menu</li>
-      </ul>
+	<h3>Flipping Between Pages</h3>
+	<ul>
+	  <li>Use Page Up/Down</li>
+	  <li>Disable the Panel by Panel mode in the top menu</li>
+	</ul>
+      </div>
     </div>
     <div id="about" class="bubble">
+      <div id="about-inner">
       <h3>Title of Comic</h3>
       <p>Summary of the comic</p>
+    </div>
     </div>
     </div>
     <div id="navcontainer">
