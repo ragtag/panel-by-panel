@@ -30,7 +30,7 @@
 	</div>
       </div>
     </div>
-    <div id="container">
+    <div id="navcontainer">
       <a href="<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn"></a>
       <a href="#" class="navbtn" id="menubtn"></a>
       <a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>

@@ -149,7 +149,7 @@ class PanelByPanel {
 
     touchNav() {
 	let self = this;
-	let swiper = new Swipe(document.querySelector('#container'));
+	let swiper = new Swipe(document.querySelector('#navcontainer'));
 	swiper.onLeft(function() { self.next() });
 	swiper.onRight(function() { self.prev() });
 	swiper.run();

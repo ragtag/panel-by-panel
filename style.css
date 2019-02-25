@@ -6,7 +6,7 @@ body {
 
 /* Layout */
 
-#container, #pagecontainer {
+#navcontainer, #pagecontainer {
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -19,7 +19,7 @@ body {
     z-index: 0;
 }
 
-#container {
+#navcontainer {
     z-index: 1;
 }
 
