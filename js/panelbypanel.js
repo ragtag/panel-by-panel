@@ -16,7 +16,7 @@ class PanelByPanel {
     constructor(comic) {
 	this.comic = comic;
 	this.currentPage;
-	this.panelMode = false;
+	this.panelMode = true;
 
 	// Go to specific page directly
 	let url = new URL(window.location.href);
@@ -62,9 +62,8 @@ class PanelByPanel {
 	this.touchNav();
 
 	// Set panel-by-panel navigation, based on ppi and window size
-	if ( this.artist.viewportWidth < pbpMaxWidth || this.artist.viewportHeight < pbpMaxHeight ) {
-	    this.panelMode = false;
-	    this.togglePanelMode(); // Makes it true
+	if ( this.artist.viewportWidth > pbpMaxWidth || this.artist.viewportHeight > pbpMaxHeight ) {
+	    this.togglePanelMode();
 	}
 	if (debug) {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
