@@ -20,6 +20,10 @@ class PanelByPanel
         if (isset($_GET['comic'])) {
             $this->name = $_GET['comic'];
         }
+        $this->lang = 'en';
+        if (isset($_GET['lang'])) {
+            $this->lang = $_GET['lang'];
+        }
         if (!isset($_GET['page'])) {
             $this->page = 0;
         } else if (!ctype_digit($_GET['page'])) {
@@ -47,9 +51,42 @@ class PanelByPanel
     }
 
     public function get_title() {
-        $title = $this->acbf->{'meta-data'}->{'book-info'}->{'book-title'}[0];
-        $title = $title." - ".$this->page." of ".sizeof($this->acbf->body->page);
-        return $title;
+        return $this->in_lang($this->acbf->{'meta-data'}->{'book-info'}->{'book-title'});
+    }
+
+    public function get_page_of() {
+        return $this->page." of ".sizeof($this->acbf->body->page);
+    }
+
+    public function get_authors() {
+        $retstring = '<ul class="credits">';
+        foreach ($this->acbf->{'meta-data'}->{'book-info'}->{'author'} as $author) {
+            $retstring .= '<li>';
+            $attr = $author->attributes();
+            if (isset($attr['activity'])) {
+                $retstring .= $attr['activity'] .' - ';
+            }
+            $retstring .= $author->{'first-name'};
+            if (isset($author->{'middle-name'})) {
+                $retstring .= ' '.$author->{'middle-name'};
+            }
+            $retstring .= ' '.$author->{'last-name'};
+            if (isset($author->{'nickname'})) {
+                $retstring .= ' ('.$author->{'nickname'}.')';
+            }
+            $retstring .= '<br/>';
+            $retstring .= '</li>';
+        }
+        return $retstring.'</ul>';
+    }
+
+    public function get_summary() {
+        $summary = $this->in_lang($this->acbf->{'meta-data'}->{'book-info'}->{'annotation'});
+        $retstring = '';
+        foreach ($summary->p as $paragraph) {
+            $retstring .= '<p>'.$paragraph.'</p>';
+        }
+        return $retstring;
     }
 
     public function get_bgcolor() {
@@ -125,6 +162,21 @@ class PanelByPanel
             $html .= "\t</a>\n";
         }
         return $html;
+    }
+
+    private function in_lang($data) {
+        if (sizeof($data) == 1) {
+            return $data[0];
+        }
+        foreach ($data as $d) {
+            $attr = $d->attributes();
+            if (isset($attr['lang'])) {
+                if ($attr['lang'] == $this->lang) {
+                    return $d;
+                }
+            }
+        }
+        return $data[0];
     }
 
     private function check_thumb($image, $thumb) {

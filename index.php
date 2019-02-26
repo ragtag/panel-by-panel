@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <?php require "panel-by-panel.php" ?>
-    <title><?= $pbp->get_title() ?></title>
+    <title><?= $pbp->get_title() ?> - <?= $pbp->get_page_of() ?></title>
     <link rel="stylesheet" href="style.css">
     <noscript><link rel="stylesheet" href="noscript.css"></noscript>
     <script type="text/javascript" src="js/anime.min.js"></script>
@@ -39,23 +39,24 @@
     <div id="bubble-container">
     <div id="help" class="bubble">
       <div id="help-inner">
-	<h3>Flipping Between Panels</h3>
+	<h3>Flip Through the Comic</h3>
 	<ul>
-	  <li>Click the sides of the screen</li>
+	  <li>Click the left or right third of your screen</li>
 	  <li>Swipe left or right</li>
-	  <li>Use the arrow keys</li>
+	  <li>Use the left or right arrow keys</li>
+	  <li>Use Page Up or Down (always flips through pages)</li>
 	</ul>
-	<h3>Flipping Between Pages</h3>
+	<h3>Pages or Panels</h3>
 	<ul>
-	  <li>Use Page Up/Down</li>
-	  <li>Disable the Panel by Panel mode in the top menu</li>
+	  <li>Toggle panel by panel mode in the top menu</li>
 	</ul>
       </div>
     </div>
     <div id="about" class="bubble">
       <div id="about-inner">
-      <h3>Title of Comic</h3>
-      <p>Summary of the comic</p>
+      <h3><?= $pbp->get_title() ?></h3>
+      <?= $pbp->get_summary() ?>
+      <?= $pbp->get_authors() ?>
     </div>
     </div>
     </div>
