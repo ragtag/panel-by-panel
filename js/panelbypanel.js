@@ -72,15 +72,10 @@ class PanelByPanel {
 	// Map out the panels on this page
 	this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
 
+	// This re-focuses if the image was not loaded on the inital focus
 	document.getElementById('page').onload = function() {
-	    console.log("Finished loading page");
+	    self.artist.focus();
 	}
-	/*    
-	previmg.onload = function() {
-	    console.log("Preloaded: "+(self.comic.currentPage - 1));
-	    self.pointsToPercent(previmg, self.comic.currentPage - 1);
-	};
-	*/
     }
 
     dont(event) {
@@ -263,7 +258,6 @@ class Draw {
     }
 
     flip() {
-	console.log('FLIPPING');
 	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
 	document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
 	let prev = this.comic.currentPage - 1
@@ -280,7 +274,6 @@ class Draw {
 	    let nextimg = new Image();
 	    let self = this;
 	    nextimg.onload = function() {
-		console.log("Preloaded: "+(self.comic.currentPage + 1));
 		self.pointsToPercent(nextimg, self.comic.currentPage + 1);
 	    };
 	    nextimg.src = this.comic.pages[this.comic.currentPage + 1].image;
@@ -289,7 +282,6 @@ class Draw {
 	    let previmg = new Image();
 	    let self = this;
 	    previmg.onload = function() {
-		console.log("Preloaded: "+(self.comic.currentPage - 1));
 		self.pointsToPercent(previmg, self.comic.currentPage - 1);
 	    };
 	    previmg.src = this.comic.pages[this.comic.currentPage - 1].image;
@@ -297,15 +289,11 @@ class Draw {
     }
 
     pointsToPercent(img, pagenumber) {
-	console.log("Points to percent for page: "+pagenumber);
 	let page = this.comic.pages[pagenumber];
 	let panels = [];
 	let frames = [];
 
-	if (page.frames.length == 0 || page.panels.length > 0) {
-	    // panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
-	    console.log("No panels on page or panels have been set");
-	} else {
+	if (!(page.frames.length == 0 || page.panels.length > 0)) {
 	    for (let f = 0; f < page.frames.length; f++) {
 		let panel = { x: 50, y: 50, width: 100, height: 100 };
 		let min = { "x": 0, "y": 0 };
@@ -325,9 +313,7 @@ class Draw {
 		panels.push(panel);
 	    }
 	    this.comic.pages[pagenumber].panels = panels;
-	    //this.comic.pages[this.comic.currentPage].frames = frames;
 	}
-	// console.log(this.comic.pages[pagenumber]);
     }
 
     setTitle() {
@@ -472,16 +458,6 @@ class Comic {
 	console.log("The transfer has been cancelled by the user")
     }
 
-    parseResponse(json) {
-	let conf = JSON.parse(json);
-	this.title = conf.title;
-	this.pages = conf.pages;
-	this.home = conf.home;
-	this.exit = conf.exit;
-	this.missing = conf.missing;
-	this.background = conf.background;
-    }
-
     parseACBF(acbf) {
 	var dom = null
 	try {
@@ -511,9 +487,7 @@ class Comic {
 	if (page["@attributes"] != undefined) {
 	    obj.background = page["@attributes"].bgcolor || null;
 	}
-	if (page.frame == undefined) {
-	    // obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
-	} else {
+	if (page.frame != undefined) {
 	    for (let f = 0; f < page.frame.length; f++) {
 		let frame = []
 		let pairs = page.frame[f]["@attributes"].points.split(" ");
@@ -614,8 +588,6 @@ window.onload = function () {
 	if (this.readyState == 4 && this.status == 200) {
 	    comic.parseACBF(this.responseText);
 	    const pbp = new PanelByPanel(comic);
-
-	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));
 	}
     }
 }
