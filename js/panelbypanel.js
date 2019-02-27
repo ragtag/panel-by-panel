@@ -69,8 +69,13 @@ class PanelByPanel {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
 	}
 
-	// Preload the next/previous page
-	this.comic.preload();
+	// Map out the panels on this page
+	this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
+
+	// This re-focuses if the image was not loaded on the inital focus
+	document.getElementById('page').onload = function() {
+	    self.artist.focus();
+	}
     }
 
     dont(event) {
@@ -87,6 +92,7 @@ class PanelByPanel {
 	} else {
 	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
+
 	}
 	this.artist.hideMenu();
 	this.artist.focus();
@@ -228,7 +234,6 @@ class Draw {
 	this.drawnPage = -1;
 	this.drawnPanel = -1;
 	this.getViewportSize();
-	this.getImageSize();
     }
 
     getViewportSize() {
@@ -236,13 +241,16 @@ class Draw {
 	this.viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     }
 
-    getImageSize() {
-	this.imageHeight = document.getElementById('page').naturalHeight;
-	this.imageWidth = document.getElementById('page').naturalWidth;
+    imageHeight() {
+	return document.getElementById('page').naturalHeight;
+    }
+
+    imageWidth() {
+	return document.getElementById('page').naturalWidth;
     }
 
     panelRatio() {
-	return (this.imageWidth * this.panel.width) / (this.imageHeight * this.panel.height);
+	return (this.imageWidth() * this.panel.width) / (this.imageHeight() * this.panel.height);
     }
 
     viewportRatio() {
@@ -258,8 +266,56 @@ class Draw {
 	document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
+	this.preload();
     }
-    
+
+    preload() {
+	if (this.comic.currentPage < this.comic.pages.length - 1) {
+	    let nextimg = new Image();
+	    let self = this;
+	    nextimg.onload = function() {
+		self.pointsToPercent(nextimg, self.comic.currentPage + 1);
+	    };
+	    nextimg.src = this.comic.pages[this.comic.currentPage + 1].image;
+	}
+	if (this.comic.currentPage > 0) {
+	    let previmg = new Image();
+	    let self = this;
+	    previmg.onload = function() {
+		self.pointsToPercent(previmg, self.comic.currentPage - 1);
+	    };
+	    previmg.src = this.comic.pages[this.comic.currentPage - 1].image;
+	}
+    }
+
+    pointsToPercent(img, pagenumber) {
+	let page = this.comic.pages[pagenumber];
+	let panels = [];
+	let frames = [];
+
+	if (!(page.frames.length == 0 || page.panels.length > 0)) {
+	    for (let f = 0; f < page.frames.length; f++) {
+		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		let min = { "x": 0, "y": 0 };
+		let max = { "x": 100, "y": 100 };
+		for (let p = 0; p < page.frames[f].length; p++) {
+		    let x = parseFloat(page.frames[f][p].x) * (100 / img.naturalWidth);
+		    let y = parseFloat(page.frames[f][p].y) * (100 / img.naturalHeight);
+		    if (x > min['x']) min['x'] = x;
+		    if (y > min['y']) min['y'] = y;
+		    if (x < max['x']) max['x'] = x;
+		    if (y < max['y']) max['y'] = y;
+		    panel['x'] = (min.x + max.x) / 2;
+		    panel['y'] = (min.y + max.y) / 2;
+		    panel['width'] = min.x - max.x;
+		    panel['height'] = min.y - max.y;
+		}
+		panels.push(panel);
+	    }
+	    this.comic.pages[pagenumber].panels = panels;
+	}
+    }
+
     setTitle() {
 	let p = this.comic.currentPage;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
@@ -290,18 +346,18 @@ class Draw {
 	}
 
 	this.getViewportSize();
-	this.getImageSize();
 
 	let scale = 1;
-	this.panel = { x: 50, y: 50, width: 100, height: 100 };
 	if (this.comic.currentPanel > -1) {
 	    this.panel = this.comic.pages[this.comic.currentPage].panels[this.comic.currentPanel];
+	} else {
+	    this.panel = { x: 50, y: 50, width: 100, height: 100 };
 	}
 
 	if (this.panelRatio() <= this.viewportRatio()) {
-	    scale = 100 / this.panel.height * this.viewportHeight / this.imageHeight;
+	    scale = 100 / this.panel.height * this.viewportHeight / this.imageHeight();
 	} else {
-	    scale = this.viewportWidth / this.imageWidth * 100 / this.panel.width;
+	    scale = this.viewportWidth / this.imageWidth() * 100 / this.panel.width;
 	}
 
 	anime({
@@ -402,16 +458,6 @@ class Comic {
 	console.log("The transfer has been cancelled by the user")
     }
 
-    parseResponse(json) {
-	let conf = JSON.parse(json);
-	this.title = conf.title;
-	this.pages = conf.pages;
-	this.home = conf.home;
-	this.exit = conf.exit;
-	this.missing = conf.missing;
-	this.background = conf.background;
-    }
-
     parseACBF(acbf) {
 	var dom = null
 	try {
@@ -424,7 +470,6 @@ class Comic {
 	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0];
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
-	this.proportions();
 	this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
 	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
@@ -436,46 +481,23 @@ class Comic {
     parsePage(page) {
 	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
 		    "background": null,
-		    "panels": []
+		    "panels": [],
+		    "frames": []
 		  };
 	if (page["@attributes"] != undefined) {
 	    obj.background = page["@attributes"].bgcolor || null;
 	}
-	if (page.frame == undefined) {
-	    // obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
-	} else {
+	if (page.frame != undefined) {
 	    for (let f = 0; f < page.frame.length; f++) {
-		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		let frame = []
 		let pairs = page.frame[f]["@attributes"].points.split(" ");
-		let min = { "x": 0, "y": 0 };
-		let max = { "x": 100, "y": 100 };
 		for (let i = 0; i < pairs.length; i++) {
-		    let xy = pairs[i].split(",");
-		    let x = parseFloat(xy[0]) * this.prop.x;
-		    let y = parseFloat(xy[1]) * this.prop.y;
-		    if (x > min['x']) min['x'] = x;
-		    if (y > min['y']) min['y'] = y;
-		    if (x < max['x']) max['x'] = x;
-		    if (y < max['y']) max['y'] = y;
-		    panel['minx'] = min.x;
-		    panel['maxx'] = max.x;
-		    panel['x'] = (min.x + max.x) / 2;
-		    panel['y'] = (min.y + max.y) / 2;
-		    panel['width'] = min.x - max.x;
-		    panel['height'] = min.y - max.y;
+		    frame.push({'x': pairs[i].split(",")[0], 'y': pairs[i].split(",")[1]});
 		}
-		obj.panels.push(panel);
+		obj.frames.push(frame);
 	    }
 	}
 	return obj;
-    }
-
-    // TODO! Maybe redo this every page, to support different page sizes.
-    proportions() {
-	this.prop = {
-	    "x": 100 / document.getElementById('page').naturalWidth,
-	    "y": 100 / document.getElementById('page').naturalHeight
-	};
     }
 
     // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
@@ -529,8 +551,6 @@ class Comic {
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 		window.location.href = this.exit;
-	    } else {
-		this.preload();
 	    }
 	}
     }
@@ -544,8 +564,6 @@ class Comic {
 		this.currentPage = 0;
 		this.currentPanel = -1;
 		window.location.href = this.home;
-	    } else {
-		this.preload();
 	    }
 	}
     }
@@ -559,20 +577,7 @@ class Comic {
 	if (this.currentPage >= this.pages.length) {
 	    window.location.href = this.exit;
 	}
-	this.preload();
     }
-    
-    preload() {
-	if (this.currentPage < this.pages.length - 1) {
-	    let nextimg = new Image();
-	    nextimg.src = this.pages[this.currentPage + 1].image;
-	}
-	if (this.currentPage > 0) {
-	    let previmg = new Image();
-	    previmg.src = this.pages[this.currentPage - 1].image;
-	}
-    }
-
 }
 
 
@@ -583,8 +588,6 @@ window.onload = function () {
 	if (this.readyState == 4 && this.status == 200) {
 	    comic.parseACBF(this.responseText);
 	    const pbp = new PanelByPanel(comic);
-
-	    //const pbp = new PanelByPanel(JSON.parse(this.responseText));
 	}
     }
 }
