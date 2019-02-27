@@ -69,8 +69,18 @@ class PanelByPanel {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
 	}
 
-	// Preload the next/previous page
-	this.comic.preload();
+	// Map out the panels on this page
+	this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
+
+	document.getElementById('page').onload = function() {
+	    console.log("Finished loading page");
+	}
+	/*    
+	previmg.onload = function() {
+	    console.log("Preloaded: "+(self.comic.currentPage - 1));
+	    self.pointsToPercent(previmg, self.comic.currentPage - 1);
+	};
+	*/
     }
 
     dont(event) {
@@ -87,6 +97,7 @@ class PanelByPanel {
 	} else {
 	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
+
 	}
 	this.artist.hideMenu();
 	this.artist.focus();
@@ -228,7 +239,6 @@ class Draw {
 	this.drawnPage = -1;
 	this.drawnPanel = -1;
 	this.getViewportSize();
-	this.getImageSize();
     }
 
     getViewportSize() {
@@ -236,13 +246,16 @@ class Draw {
 	this.viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     }
 
-    getImageSize() {
-	this.imageHeight = document.getElementById('page').naturalHeight;
-	this.imageWidth = document.getElementById('page').naturalWidth;
+    imageHeight() {
+	return document.getElementById('page').naturalHeight;
+    }
+
+    imageWidth() {
+	return document.getElementById('page').naturalWidth;
     }
 
     panelRatio() {
-	return (this.imageWidth * this.panel.width) / (this.imageHeight * this.panel.height);
+	return (this.imageWidth() * this.panel.width) / (this.imageHeight() * this.panel.height);
     }
 
     viewportRatio() {
@@ -250,6 +263,7 @@ class Draw {
     }
 
     flip() {
+	console.log('FLIPPING');
 	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
 	document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
 	let prev = this.comic.currentPage - 1
@@ -258,11 +272,33 @@ class Draw {
 	document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
-	this.frameToPanel();
+	this.preload();
     }
 
-    frameToPanel() {
-	let page = this.comic.pages[this.comic.currentPage];
+    preload() {
+	if (this.comic.currentPage < this.comic.pages.length - 1) {
+	    let nextimg = new Image();
+	    let self = this;
+	    nextimg.onload = function() {
+		console.log("Preloaded: "+(self.comic.currentPage + 1));
+		self.pointsToPercent(nextimg, self.comic.currentPage + 1);
+	    };
+	    nextimg.src = this.comic.pages[this.comic.currentPage + 1].image;
+	}
+	if (this.comic.currentPage > 0) {
+	    let previmg = new Image();
+	    let self = this;
+	    previmg.onload = function() {
+		console.log("Preloaded: "+(self.comic.currentPage - 1));
+		self.pointsToPercent(previmg, self.comic.currentPage - 1);
+	    };
+	    previmg.src = this.comic.pages[this.comic.currentPage - 1].image;
+	}
+    }
+
+    pointsToPercent(img, pagenumber) {
+	console.log("Points to percent for page: "+pagenumber);
+	let page = this.comic.pages[pagenumber];
 	let panels = [];
 	let frames = [];
 
@@ -270,14 +306,13 @@ class Draw {
 	    // panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
 	    console.log("No panels on page or panels have been set");
 	} else {
-	    this.getImageSize();
 	    for (let f = 0; f < page.frames.length; f++) {
 		let panel = { x: 50, y: 50, width: 100, height: 100 };
 		let min = { "x": 0, "y": 0 };
 		let max = { "x": 100, "y": 100 };
 		for (let p = 0; p < page.frames[f].length; p++) {
-		    let x = parseFloat(page.frames[f][p].x) * (100 / document.getElementById('page').naturalWidth);
-		    let y = parseFloat(page.frames[f][p].y) * (100 / document.getElementById('page').naturalHeight);
+		    let x = parseFloat(page.frames[f][p].x) * (100 / img.naturalWidth);
+		    let y = parseFloat(page.frames[f][p].y) * (100 / img.naturalHeight);
 		    if (x > min['x']) min['x'] = x;
 		    if (y > min['y']) min['y'] = y;
 		    if (x < max['x']) max['x'] = x;
@@ -289,12 +324,12 @@ class Draw {
 		}
 		panels.push(panel);
 	    }
-	    this.comic.pages[this.comic.currentPage].panels = panels;
+	    this.comic.pages[pagenumber].panels = panels;
 	    //this.comic.pages[this.comic.currentPage].frames = frames;
 	}
-	console.log(this.comic.pages[this.comic.currentPage]);
+	// console.log(this.comic.pages[pagenumber]);
     }
-    
+
     setTitle() {
 	let p = this.comic.currentPage;
 	document.title = this.comic.title + " - " + p + " of " + this.comic.pages.length;
@@ -334,9 +369,9 @@ class Draw {
 	}
 
 	if (this.panelRatio() <= this.viewportRatio()) {
-	    scale = 100 / this.panel.height * this.viewportHeight / this.imageHeight;
+	    scale = 100 / this.panel.height * this.viewportHeight / this.imageHeight();
 	} else {
-	    scale = this.viewportWidth / this.imageWidth * 100 / this.panel.width;
+	    scale = this.viewportWidth / this.imageWidth() * 100 / this.panel.width;
 	}
 
 	anime({
@@ -542,8 +577,6 @@ class Comic {
 		this.currentPage = this.pages.length - 1;
 		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 		window.location.href = this.exit;
-	    } else {
-		this.preload();
 	    }
 	}
     }
@@ -557,8 +590,6 @@ class Comic {
 		this.currentPage = 0;
 		this.currentPanel = -1;
 		window.location.href = this.home;
-	    } else {
-		this.preload();
 	    }
 	}
     }
@@ -572,26 +603,7 @@ class Comic {
 	if (this.currentPage >= this.pages.length) {
 	    window.location.href = this.exit;
 	}
-	this.preload();
     }
-    
-    preload() {
-	if (this.currentPage < this.pages.length - 1) {
-	    let nextimg = new Image();
-	    nextimg.onload = function() {
-		console.log("Next image finished loading");
-	    };
-	    nextimg.src = this.pages[this.currentPage + 1].image;
-	}
-	if (this.currentPage > 0) {
-	    let previmg = new Image();
-	    previmg.onload = function() {
-		console.log("Prev image finished loading");
-	    };
-	    previmg.src = this.pages[this.currentPage - 1].image;
-	}
-    }
-
 }
 
 
