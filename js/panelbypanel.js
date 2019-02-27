@@ -258,6 +258,42 @@ class Draw {
 	document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
+	this.frameToPanel();
+    }
+
+    frameToPanel() {
+	console.log("Running frames");
+	let page = this.comic.pages[this.comic.currentPage];
+	let panels = [];
+	let frames = [];
+
+	if (page.frames == undefined) {
+	    // panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
+	} else {
+	    for (let f = 0; f < page.frames.length; f++) {
+		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		let min = { "x": 0, "y": 0 };
+		let max = { "x": 100, "y": 100 };
+		for (let i = 0; i < page.frames[f].length; i++) {
+		    let xy = page.frames[f][i].split(",");
+		    let x = parseFloat(xy[0]) * (100 / document.getElementById('page').naturalWidth);
+		    let y = parseFloat(xy[1]) * (100 / document.getElementById('page').naturalHeight);
+		    if (x > min['x']) min['x'] = x;
+		    if (y > min['y']) min['y'] = y;
+		    if (x < max['x']) max['x'] = x;
+		    if (y < max['y']) max['y'] = y;
+		    //panel['minx'] = min.x;
+		    //panel['maxx'] = max.x;
+		    panel['x'] = (min.x + max.x) / 2;
+		    panel['y'] = (min.y + max.y) / 2;
+		    panel['width'] = min.x - max.x;
+		    panel['height'] = min.y - max.y;
+		}
+		panels.push(panel);
+	    }
+	    this.comic.pages[this.comic.currentPage].panels = panels;
+	    //this.comic.pages[this.comic.currentPage].frames = frames;
+	}
     }
     
     setTitle() {
@@ -436,16 +472,20 @@ class Comic {
     parsePage(page) {
 	let obj = { "image": this.name + "/" + page.image["@attributes"].href,
 		    "background": null,
-		    "panels": []
+		    "panels": [],
+		    "frames": []
 		  };
 	if (page["@attributes"] != undefined) {
 	    obj.background = page["@attributes"].bgcolor || null;
 	}
 	if (page.frame == undefined) {
 	    // obj.panels.push({ 'x':50, 'y': 50, 'width': 100, 'height': 100 });
+	    console.log("No frames: "+page.image["@attributes"].href);
 	} else {
+	    console.log("Frames: "+page.image["@attributes"].href);
 	    for (let f = 0; f < page.frame.length; f++) {
 		let panel = { x: 50, y: 50, width: 100, height: 100 };
+		obj.frames.push(page.frame[f]["@attributes"].points.split(" "));
 		let pairs = page.frame[f]["@attributes"].points.split(" ");
 		let min = { "x": 0, "y": 0 };
 		let max = { "x": 100, "y": 100 };
@@ -457,8 +497,8 @@ class Comic {
 		    if (y > min['y']) min['y'] = y;
 		    if (x < max['x']) max['x'] = x;
 		    if (y < max['y']) max['y'] = y;
-		    panel['minx'] = min.x;
-		    panel['maxx'] = max.x;
+		    //panel['minx'] = min.x;
+		    //panel['maxx'] = max.x;
 		    panel['x'] = (min.x + max.x) / 2;
 		    panel['y'] = (min.y + max.y) / 2;
 		    panel['width'] = min.x - max.x;
