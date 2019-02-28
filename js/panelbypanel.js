@@ -425,7 +425,15 @@ class Draw {
 
 class Comic {
     constructor(request) {
+	// Get language, if set.
 	let url = new URL(window.location.href);
+	let l = url.searchParams.get("lang");
+	if (l != undefined) {
+	    this.lang = l;
+	} else {
+	    this.lang = "en";
+	}
+
 	this.name = url.searchParams.get('comic') || "comic";
 	this.url = "./" + this.name + "/" + this.name + ".acbf";
 	this.currentPage = 0;
@@ -466,8 +474,14 @@ class Comic {
 	catch (e) { dom = null; }
 	this.acbf = this.xmlToJson(dom);
 	console.log(this.acbf);
-	// TODO! Missing language information, and may break if only one language is used.
-	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0];
+	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0]["#text"];
+	for (let t = 0; t < this.acbf.ACBF["meta-data"]["book-info"]["book-title"].length; t++) {
+	    if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang != undefined) {
+		if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang == this.lang) {
+		    this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["#text"];
+		}
+	    }
+	}
 	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
 	this.pages = [];
 	this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
@@ -485,6 +499,8 @@ class Comic {
 		    "frames": []
 		  };
 	if (page["@attributes"] != undefined) {
+	    console.log(page);
+	    console.log(page["@attributes"].bgcolor);
 	    obj.background = page["@attributes"].bgcolor || null;
 	}
 	if (page.frame != undefined) {
@@ -500,38 +516,34 @@ class Comic {
 	return obj;
     }
 
-    // From https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
-    // by demircancelebi https://gist.github.com/demircancelebi
+    // Modified version from here: http://davidwalsh.name/convert-xml-json
     xmlToJson(xml) {
-	// Create the return object
-	let obj = {};
-
-	if (xml.nodeType === 1) { // element
-	    // do attributes
-	    if (xml.attributes.length > 0) {
-		obj['@attributes'] = {};
-		for (let j = 0; j < xml.attributes.length; j += 1) {
-		    const attribute = xml.attributes.item(j);
-		    obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+	var obj = {};
+	
+	if (xml.nodeType == 1 || xml.nodeType == 3) {
+	    if (xml.attributes != undefined) {
+		if (xml.attributes.length > 0) {
+		    obj["@attributes"] = {};
+		    for (var j = 0; j < xml.attributes.length; j++) {
+			var attribute = xml.attributes.item(j);
+			obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+		    }
 		}
 	    }
-	} else if (xml.nodeType === 3) { // text
-	    obj = xml.nodeValue;
 	}
 	
-	// do children
-	// If just one text node inside
 	if (xml.hasChildNodes() && xml.childNodes.length === 1 && xml.childNodes[0].nodeType === 3) {
-	    obj = xml.childNodes[0].nodeValue;
-	} else if (xml.hasChildNodes()) {
-	    for (let i = 0; i < xml.childNodes.length; i += 1) {
-		const item = xml.childNodes.item(i);
-		const nodeName = item.nodeName;
-		if (typeof (obj[nodeName]) === 'undefined') {
+	    obj["#text"] = xml.childNodes[0].nodeValue;
+	}
+	else if (xml.hasChildNodes()) {
+	    for(var i = 0; i < xml.childNodes.length; i++) {
+		var item = xml.childNodes.item(i);
+		var nodeName = item.nodeName;
+		if (typeof(obj[nodeName]) == "undefined") {
 		    obj[nodeName] = this.xmlToJson(item);
 		} else {
-		    if (typeof (obj[nodeName].push) === 'undefined') {
-			const old = obj[nodeName];
+		    if (typeof(obj[nodeName].push) == "undefined") {
+			var old = obj[nodeName];
 			obj[nodeName] = [];
 			obj[nodeName].push(old);
 		    }
@@ -539,9 +551,10 @@ class Comic {
 		}
 	    }
 	}
+
 	return obj;
     }
-
+    
     next() {
 	this.currentPanel++;
 	if (this.currentPanel >= this.pages[this.currentPage].panels.length) {
