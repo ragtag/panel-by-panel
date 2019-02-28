@@ -499,8 +499,6 @@ class Comic {
 		    "frames": []
 		  };
 	if (page["@attributes"] != undefined) {
-	    console.log(page);
-	    console.log(page["@attributes"].bgcolor);
 	    obj.background = page["@attributes"].bgcolor || null;
 	}
 	if (page.frame != undefined) {
