@@ -14,6 +14,7 @@ class PanelByPanel
         $this->home = $home;
         $this->thumbMaxWidth = $thumbMaxWidth;
         $this->thumbMaxHeight = $thumbMaxHeight;
+        $this->htaccess = $htaccess;
         
         // Get comic and page
         $this->name = 'comic';
@@ -24,16 +25,15 @@ class PanelByPanel
         if (isset($_GET['lang'])) {
             $this->lang = $_GET['lang'];
         }
+
         if (!isset($_GET['page'])) {
             $this->page = 0;
-        } else if (!ctype_digit($_GET['page'])) {
-            $this->page = 0;
         } else {
-            $this->page = (int)$_GET['page'];
+            $this->page = (int)preg_replace("/[^0-9]/", '', $_GET['page']);
         }
-        
+
         // Read Advanced Comic Book Format
-        $acbf_string = file_get_contents('./'.$this->name.'/'.$this->name.'.acbf');
+        $acbf_string = file_get_contents('./comics/'.$this->name.'/'.$this->name.'.acbf');
         $this->acbf = new SimpleXMLElement($acbf_string);
     }
 
@@ -43,9 +43,9 @@ class PanelByPanel
 
     public function get_image() {
         if ($this->page == 0) {
-            $image = $this->name."/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
+            $image = "comics/".$this->name."/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
         } else {
-            $image = $this->name."/".$this->acbf->body->page[$this->page-1]->image['href'];
+            $image = "comics/".$this->name."/".$this->acbf->body->page[$this->page-1]->image['href'];
         }
         return $image;
     }
@@ -110,7 +110,11 @@ class PanelByPanel
         if ($this->page >= sizeof($this->acbf->body->page)) {
             $next_page = "TODO! Exit";
         } else {
-            $next_page = "index.php?comic=".$this->name."&page=" . ($this->page + 1);
+            if ($this->htaccess) {
+                $next_page = $this->name."/page-" . ($this->page + 1);
+            } else {
+                $next_page = "index.php?comic=".$this->name."&page=" . ($this->page + 1);
+            }
         }
         return $next_page;
     }
@@ -118,14 +122,22 @@ class PanelByPanel
     public function get_prev() {
         if ($this->page <= 0) {
             $prev_page = "TODO! Home";
-        } else {
-            $prev_page = "index.php?comic=".$this->name."&page=" . ($this->page - 1);
+        } else { 
+            if ($this->htaccess) {
+                $prev_page = $this->name."/page-" . ($this->page - 1);
+            } else {
+                $prev_page = "index.php?comic=".$this->name."&page=" . ($this->page - 1);
+            }
         }
         return $prev_page;
     }
 
     public function get_thumbs() {
-        return "thumbs.php?comic=".$this->name."&page=".($this->page);
+        if ($this->htaccess) {
+            return $this->name."/thumbs/".$this->page;
+        } else {
+            return "thumbs.php?comic=".$this->name."&page=".$this->page;
+        }
     }
 
     public function get_thumbs_bgcolor() {
@@ -136,7 +148,7 @@ class PanelByPanel
     public function draw_thumbs() {
         // Create thumbs folder, if not there
         $cwd = getcwd();
-        $thumbsdir = $cwd."/".$this->name."/thumbs";
+        $thumbsdir = $cwd."/comics/".$this->name."/thumbs";
         if (!file_exists($thumbsdir)) {
             mkdir($thumbsdir, 0777, true);
         }
@@ -145,20 +157,24 @@ class PanelByPanel
         $html = "";
         for ($i = 0; $i < sizeof($this->acbf->body->page);$i++) {
             if ($i == 0) {
-                $image = $this->name."/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
-                $thumb = $this->name."/thumbs/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
+                $image = "comics/".$this->name."/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
+                $thumb = "comics/".$this->name."/thumbs/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
             } else {
-                $image = $this->name."/".$this->acbf->body->page[$i-1]->image['href'];
-                $thumb = $this->name."/thumbs/".$this->acbf->body->page[$i-1]->image['href'];
+                $image = "comics/".$this->name."/".$this->acbf->body->page[$i-1]->image['href'];
+                $thumb = "comics/".$this->name."/thumbs/".$this->acbf->body->page[$i-1]->image['href'];
             }
-            if ($i == $this->page) {
+            if ($i == $this->page && $this->page > 0) {
                 $id = "active-thumb";
             } else {
                 $id = "page-".$i;
             }
             $this->check_thumb($cwd."/".$image, $cwd."/".$thumb);
-            $html .= "\t<a class='thumblink' href='index.php?comic=".$this->name."&page=".$i."'>\n";
-            $html .= "\t\t<img class='thumb' id='".$id."' src=".$thumb." />\n";
+            if ($this->htaccess) {
+                $html .= "\t<a class='thumblink' href='/".$this->name."/page-".$i.".html'>\n";
+            } else {
+                $html .= "\t<a class='thumblink' href='/index.php?comic=".$this->name."&page=".$i."'>\n";
+            }
+            $html .= "\t\t<img class='thumb' id='".$id."' src=/".$thumb." />\n";
             $html .= "\t</a>\n";
         }
         return $html;
