@@ -8,6 +8,8 @@ const menuDelay = 1500;
 const pbpMaxWidth = 800;
 // ...this height.
 const pbpMaxHeight = 1000;
+// Use htaccess mod rewrite
+const htaccess = true;
 // Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
 const debug = false;
 
@@ -21,6 +23,9 @@ class PanelByPanel {
 	// Go to specific page directly
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
+	if (htaccess) {
+	    p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
+	}
 	if (!isNaN(p)) {
 	    this.comic.gotoPage(p);
 	}
@@ -35,7 +40,12 @@ class PanelByPanel {
 	window.addEventListener("popstate", function(e) {
 	    let url = new URL(window.location.href);
 	    let p = parseInt(url.searchParams.get("page"));
+	    if (htaccess) {
+		p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
+	    }
+	    console.log('a');
 	    if (!isNaN(p)) {
+		console.log("Page is popped: "+p);
 		self.comic.gotoPage(p);
 		self.artist.focus();
 	    }
@@ -92,7 +102,6 @@ class PanelByPanel {
 	} else {
 	    this.comic.gotoPage(this.comic.currentPage + 1);
 	    this.artist.storeHistory();
-
 	}
 	this.artist.hideMenu();
 	this.artist.focus();
@@ -258,33 +267,51 @@ class Draw {
     }
 
     flip() {
-	document.getElementById('page').src = this.comic.pages[this.comic.currentPage].image;
-	document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
-	let prev = this.comic.currentPage - 1
-	let next = this.comic.currentPage + 1
-	document.getElementById('prevbtn').href = 'index.php?comic='+this.comic.name+'&page='+prev;
-	document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
+	console.log(this.comic.currentPage);
+	document.getElementById('page').src = "/comics/"+this.comic.pages[this.comic.currentPage].image;
+	if (htaccess) {
+	    document.getElementById('thumbsbtn').href = '/'+this.comic.name+'/thumbs/'+this.comic.currentPage;
+	} else {
+	    document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
+	}
+	let prev = this.comic.currentPage - 1;
+	let next = this.comic.currentPage + 1;
+	if (htaccess) {
+	    document.getElementById('prevbtn').href = '/'+this.comic.name+'/page-'+prev;
+	} else {
+	    document.getElementById('prevbtn').href = 'index.php?comic='+this.comic.name+'&page='+prev;
+	}
+	if (htaccess) {
+	    document.getElementById('nextbtn').href = '/'+this.comic.name+'/page-'+next;
+	} else {
+	    document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
+	}
 	this.setTitle();
 	this.setBackground();
 	this.preload();
+	console.log("FLIP");
     }
 
     preload() {
+	console.log(this.comic.pages[this.comic.currentPage + 1].image);
 	if (this.comic.currentPage < this.comic.pages.length - 1) {
 	    let nextimg = new Image();
 	    let self = this;
 	    nextimg.onload = function() {
 		self.pointsToPercent(nextimg, self.comic.currentPage + 1);
+		console.log("preloading " + (self.comic.currentPage + 1));
+
 	    };
-	    nextimg.src = this.comic.pages[this.comic.currentPage + 1].image;
+	    nextimg.src = "/comics/"+this.comic.pages[this.comic.currentPage + 1].image;
 	}
 	if (this.comic.currentPage > 0) {
 	    let previmg = new Image();
 	    let self = this;
 	    previmg.onload = function() {
 		self.pointsToPercent(previmg, self.comic.currentPage - 1);
+		console.log("preloading " + (self.comic.currentPage - 1));
 	    };
-	    previmg.src = this.comic.pages[this.comic.currentPage - 1].image;
+	    previmg.src = "/comics/"+this.comic.pages[this.comic.currentPage - 1].image;
 	}
     }
 
@@ -324,7 +351,13 @@ class Draw {
     storeHistory() {
 	let p = this.comic.currentPage;
 	let url = new URL(window.location.href);
-	window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
+	if (htaccess) {
+	    window.history.pushState("", "", "/"+this.comic.name+"/page-"+this.comic.currentPage);
+	    console.log("History: "+this.comic.name+"/page-"+this.comic.currentPage);
+	} else {
+	    window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
+	    console.log("No History: "+url.pathname+'?page=' + p + "&comic=" + this.comic.name);
+	}
     }
 
     setBackground() {
@@ -428,14 +461,21 @@ class Comic {
 	// Get language, if set.
 	let url = new URL(window.location.href);
 	let l = url.searchParams.get("lang");
+	if (htaccess) {
+	    l = url.pathname.split('/').slice(1)[3];
+	}
 	if (l != undefined) {
 	    this.lang = l;
 	} else {
 	    this.lang = "en";
 	}
 
-	this.name = url.searchParams.get('comic') || "comic";
-	this.url = "./" + this.name + "/" + this.name + ".acbf";
+	if (htaccess) {
+	    this.name  = url.pathname.split('/').slice(1)[0];
+	} else {
+	    this.name = url.searchParams.get('comic') || "comic";
+	}
+	this.url = "/comics/" + this.name + "/" + this.name + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);

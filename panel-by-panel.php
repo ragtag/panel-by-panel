@@ -134,9 +134,9 @@ class PanelByPanel
 
     public function get_thumbs() {
         if ($this->htaccess) {
-            return $this->name."/index.html";
+            return $this->name."/thumbs/".$this->page;
         } else {
-            return "thumbs.php?comic=".$this->name."&page=".($this->page);
+            return "thumbs.php?comic=".$this->name."&page=".$this->page;
         }
     }
 
