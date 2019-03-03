@@ -1,0 +1,16 @@
+Options +FollowSymLinks
+RewriteEngine On
+ 
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-f
+ 
+# URL example.com/ComicBookName/page-1
+RewriteRule ^([A-Za-z0-9-]+)/page-([0-9]+)$ index.php?comic=$1&page=$2 [NC]
+RewriteRule ^([A-Za-z0-9-]+)/page-([0-9]+).html$ index.php?comic=$1&page=$2 [NC]
+RewriteRule ^([A-Za-z0-9-]+)/page-([0-9]+)/$ index.php?comic=$1&page=$2 [NC]
+RewriteRule ^([A-Za-z0-9-]+)/$ index.php?comic=$1&page=0 [NC]
+# URL example.com/ComicBookName/thumb
+RewriteRule ^([A-Za-z0-9-]+)/thumbs$ thumbs.php?comic=$1&page=0 [NC]
+RewriteRule ^([A-Za-z0-9-]+)/thumbs/$ thumbs.php?comic=$1&page=0 [NC]
+RewriteRule ^([A-Za-z0-9-]+)/thumbs/([0-9]+)$ thumbs.php?comic=$1&page=$2 [NC]
