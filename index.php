@@ -24,7 +24,7 @@
     <title><?= $pbp->get_title() ?> - <?= $pbp->get_page_of() ?></title>
     <link rel="stylesheet" href="/pbp/style.css">
     <noscript><link rel="stylesheet" href="/pbp/noscript.css"></noscript>
-    <script type="text/javascript" src="/external/anime.min.js"></script>
+    <script type="text/javascript" src="/animejs/anime.min.js"></script>
     <script type="text/javascript" src="/pbp/panelbypanel.js"></script>
   </head>
   <body bgcolor="<?= $pbp->get_bgcolor() ?>">
