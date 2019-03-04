@@ -113,7 +113,7 @@ class PanelByPanel
             if ($this->htaccess) {
                 $next_page = $this->name."/page-" . ($this->page + 1);
             } else {
-                $next_page = "index.php?comic=".$this->name."&page=" . ($this->page + 1);
+                $next_page = "pbp.php?comic=".$this->name."&page=" . ($this->page + 1);
             }
         }
         return $next_page;
@@ -126,7 +126,7 @@ class PanelByPanel
             if ($this->htaccess) {
                 $prev_page = $this->name."/page-" . ($this->page - 1);
             } else {
-                $prev_page = "index.php?comic=".$this->name."&page=" . ($this->page - 1);
+                $prev_page = "pbp.php?comic=".$this->name."&page=" . ($this->page - 1);
             }
         }
         return $prev_page;
@@ -172,7 +172,7 @@ class PanelByPanel
             if ($this->htaccess) {
                 $html .= "\t<a class='thumblink' href='/".$this->name."/page-".$i.".html'>\n";
             } else {
-                $html .= "\t<a class='thumblink' href='/index.php?comic=".$this->name."&page=".$i."'>\n";
+                $html .= "\t<a class='thumblink' href='/pbp.php?comic=".$this->name."&page=".$i."'>\n";
             }
             $html .= "\t\t<img class='thumb' id='".$id."' src=/".$thumb." />\n";
             $html .= "\t</a>\n";

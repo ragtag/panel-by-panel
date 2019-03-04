@@ -294,12 +294,12 @@ class Draw {
 	if (htaccess) {
 	    document.getElementById('prevbtn').href = '/'+this.comic.name+'/page-'+prev;
 	} else {
-	    document.getElementById('prevbtn').href = 'index.php?comic='+this.comic.name+'&page='+prev;
+	    document.getElementById('prevbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+prev;
 	}
 	if (htaccess) {
 	    document.getElementById('nextbtn').href = '/'+this.comic.name+'/page-'+next;
 	} else {
-	    document.getElementById('nextbtn').href = 'index.php?comic='+this.comic.name+'&page='+next;
+	    document.getElementById('nextbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+next;
 	}
 	this.setTitle();
 	this.setBackground();
