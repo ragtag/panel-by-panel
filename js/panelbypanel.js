@@ -18,7 +18,6 @@ class PanelByPanel {
     constructor(comic) {
 	this.comic = comic;
 	this.currentPage;
-	this.panelMode = true;
 
 	// Go to specific page directly
 	let url = new URL(window.location.href);
@@ -70,8 +69,18 @@ class PanelByPanel {
 	this.touchNav();
 
 	// Set panel-by-panel navigation, based on ppi and window size
-	if ( this.artist.viewportWidth > pbpMaxWidth || this.artist.viewportHeight > pbpMaxHeight ) {
-	    this.togglePanelMode();
+	if ("panelMode" in sessionStorage) {
+	    if (sessionStorage.getItem("panelMode") === "true") {
+		this.setPanelMode(true);
+	    } else {
+		this.setPanelMode(false);
+	    }
+	} else {
+	    if ( this.artist.viewportWidth > pbpMaxWidth || this.artist.viewportHeight > pbpMaxHeight ) {
+		this.setPanelMode(false);
+	    } else {
+		this.setPanelMode(true);
+	    }
 	}
 	if (debug) {
 	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
@@ -128,16 +137,25 @@ class PanelByPanel {
 	}
     }
 
-    togglePanelMode() {
-	if (this.panelMode == true) {
+    setPanelMode(value) {
+	if (value === true) {
+	    this.panelMode = true;
+	    this.panelButton.style.opacity = 1.0;
+	} else {
 	    this.panelMode = false;
 	    this.panelButton.style.opacity = 0.5;
 	    this.artist.focus();
-	} else {
-	    this.panelMode = true;
-	    this.panelButton.style.opacity = 1.0;
 	}
+	sessionStorage.setItem("panelMode", this.panelMode);
 	this.artist.hideMenu;
+    }
+	    
+    togglePanelMode() {
+	if (this.panelMode == true) {
+	    this.setPanelMode(false);
+	} else {
+	    this.setPanelMode(true);
+	}
     }
 
     keyboardNav() {
