@@ -10,7 +10,7 @@ class PanelByPanel
 
     public function __construct() {
         // Read config
-        require_once('panel-by-panel.conf');
+        require_once('pbp/panelbypanel.conf');
         $this->home = $home;
         $this->thumbMaxWidth = $thumbMaxWidth;
         $this->thumbMaxHeight = $thumbMaxHeight;
