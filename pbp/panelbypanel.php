@@ -11,7 +11,8 @@ class PanelByPanel
     public function __construct() {
         // Read config
         require_once('pbp/panelbypanel.conf');
-        $this->home = $home;
+        $this->homepage = $homepage;
+        $this->exitpage = $exitpage;
         $this->thumbMaxWidth = $thumbMaxWidth;
         $this->thumbMaxHeight = $thumbMaxHeight;
         $this->htaccess = $htaccess;
@@ -38,7 +39,11 @@ class PanelByPanel
     }
 
     public function get_home() {
-        return $this->home;
+        return $this->homepage;
+    }
+
+    public function get_exit() {
+        return $this->exitpage;
     }
 
     public function get_image() {

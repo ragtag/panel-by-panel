@@ -467,6 +467,8 @@ class Draw {
 
 class Comic {
     constructor(request) {
+	this.homepage = document.getElementById('homebtn').href;
+	this.exitpage = document.getElementById('exitbtn').href;
 	// Get language, if set.
 	let url = new URL(window.location.href);
 	let l = url.searchParams.get("lang");
@@ -608,9 +610,7 @@ class Comic {
 	    this.currentPage++;
 	    this.currentPanel = -1;
 	    if (this.currentPage >= this.pages.length) {
-		this.currentPage = this.pages.length - 1;
-		this.currentPanel = this.pages[this.currentPage].panels.length - 1;
-		window.location.href = this.exit;
+		window.location.href = this.exitpage;
 	    }
 	}
     }
@@ -621,9 +621,7 @@ class Comic {
 	    this.currentPage--;
 	    this.currentPanel = this.pages[this.currentPage].panels.length - 1;
 	    if (this.currentPage < 0) {
-		this.currentPage = 0;
-		this.currentPanel = -1;
-		window.location.href = this.home;
+		window.location.href = this.homepage;
 	    }
 	}
     }
@@ -632,10 +630,10 @@ class Comic {
 	this.currentPage = page;
 	this.currentPanel = -1;
 	if (this.currentPage < 0) {
-	    window.location.href = this.home;
+	    window.location.href = this.homepage;
 	}
 	if (this.currentPage >= this.pages.length) {
-	    window.location.href = this.exit;
+	    window.location.href = this.exitpage;
 	}
     }
 }

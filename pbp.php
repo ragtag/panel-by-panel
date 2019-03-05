@@ -31,9 +31,10 @@
     <div id="menuzone">
       <div id="menu">
 	<div id="menu-left">
-	  <a href="/<?= $pbp->get_home() ?>" id="homebtn">
+	  <a href="<?= $pbp->get_home() ?>" id="homebtn">
 	    <img src="/pbp/images/back.svg" />
 	  </a>
+      <a href="<?= $pbp->get_exit() ?>" id="exitbtn" style="display:none"></a>
 	</div>
 	<div id="menu-center">
 	  <a href="" id="aboutbtn" class="button">
