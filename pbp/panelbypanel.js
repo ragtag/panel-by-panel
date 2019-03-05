@@ -524,16 +524,21 @@ class Comic {
 	}
 	catch (e) { dom = null; }
 	this.acbf = this.xmlToJson(dom);
-	console.log(this.acbf);
-	this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0]["#text"];
-	for (let t = 0; t < this.acbf.ACBF["meta-data"]["book-info"]["book-title"].length; t++) {
-	    if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang != undefined) {
-		if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang == this.lang) {
-		    this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["#text"];
+	if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"]['#text'] == undefined) {
+	    this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][0]["#text"];
+	    for (let t = 0; t < this.acbf.ACBF["meta-data"]["book-info"]["book-title"].length; t++) {
+		if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang != undefined) {
+		    if (this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["@attributes"].lang == this.lang) {
+			this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"][t]["#text"];
+		    }
 		}
 	    }
+	} else {
+	    this.title = this.acbf.ACBF["meta-data"]["book-info"]["book-title"]["#text"];
 	}
-	this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
+	if (this.acbf.ACBF.body["@attributes"] != undefined) {
+	    this.background = this.acbf.ACBF.body["@attributes"].bgcolor;
+	}
 	this.pages = [];
 	this.pages.push(this.parsePage(this.acbf.ACBF["meta-data"]["book-info"].coverpage));
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
