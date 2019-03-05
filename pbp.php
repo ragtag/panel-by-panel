@@ -28,24 +28,52 @@
     <script type="text/javascript" src="/pbp/panelbypanel.js"></script>
   </head>
   <body bgcolor="<?= $pbp->get_bgcolor() ?>">
+
     <div id="menuzone">
       <div id="menu">
 	<div id="menu-left">
 	  <a href="<?= $pbp->get_home() ?>" id="homebtn">
 	    <img src="/pbp/images/back.svg" />
 	  </a>
-      <a href="<?= $pbp->get_exit() ?>" id="exitbtn" style="display:none"></a>
+	  <a href="<?= $pbp->get_exit() ?>" id="exitbtn" style="display:none"></a>
 	</div>
 	<div id="menu-center">
 	  <a href="" id="aboutbtn" class="button">
 	    <img src="/pbp/images/about.svg" alt="About this comic" />
 	  </a>
+	  <div id="about" class="bubble">
+	    <div id="about-inner" class="bubble-inner">
+	      <h3><?= $pbp->get_title() ?></h3>
+	      <?= $pbp->get_summary() ?>
+	      <?= $pbp->get_authors() ?>
+	    </div>
+	  </div>
 	  <a href="#" id="pbpbtn" class="button">
 	    <img src="/pbp/images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
 	  </a>
 	  <a href="" id="helpbtn" class="button">
 	    <img src="/pbp/images/help.svg" alt="Help" />
 	  </a>
+	  <div id="help" class="bubble">
+	    <div id="help-inner" class="bubble-inner">
+	      <noscript>
+		<h3 style="color:red">JavaScrip Disabled!</h3>
+		<p>To get to full set of features from this reader, please enable JavaScript.</p>
+		<p>You can still navigate the comic by pressing the left or right third of your screen, but other features, such as reading panel by panel, won't work.</p>
+	      </noscript>
+	      <h3>Navigate the Comic</h3>
+	      <ul>
+		<li>Click the left or right third of your screen</li>
+		<li>Swipe left or right</li>
+		<li>Use the left or right arrow keys</li>
+		<li>Use Page Up or Down (always flips through pages)</li>
+	      </ul>
+	      <h3>Pages or Panels</h3>
+	      <ul>
+		<li>Toggle panel by panel mode in the top menu</li>
+	      </ul>
+	    </div>
+	  </div>
 	</div>
 	<div id="menu-right">
 	  <a href="/<?= $pbp->get_thumbs() ?>" id="thumbsbtn" alt="Show page overview">
@@ -54,39 +82,18 @@
 	</div>
       </div>
     </div>
-    <div id="bubble-container">
-    <div id="help" class="bubble">
-      <div id="help-inner">
-	<h3>Flip Through the Comic</h3>
-	<ul>
-	  <li>Click the left or right third of your screen</li>
-	  <li>Swipe left or right</li>
-	  <li>Use the left or right arrow keys</li>
-	  <li>Use Page Up or Down (always flips through pages)</li>
-	</ul>
-	<h3>Pages or Panels</h3>
-	<ul>
-	  <li>Toggle panel by panel mode in the top menu</li>
-	</ul>
-      </div>
-    </div>
-    <div id="about" class="bubble">
-      <div id="about-inner">
-      <h3><?= $pbp->get_title() ?></h3>
-      <?= $pbp->get_summary() ?>
-      <?= $pbp->get_authors() ?>
-    </div>
-    </div>
-    </div>
+
     <div id="navcontainer">
       <a href="/<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn"></a>
       <a href="#" class="navbtn" id="menubtn"></a>
       <a href="/<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
     </div>
+
     <div id="pagecontainer">
       <img src="/<?= $pbp->get_image() ?>"
 	   id="page"
 	   style="transform: translate(-50%, -50%);" />
     </div>
+
   </body>
 </html>

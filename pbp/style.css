@@ -87,13 +87,14 @@ body {
     float: right;
 }
 
-/* Help */
+/* About & Help */
 @font-face {
     font-family: "KomikaSlick";
     src: url("fonts/KOMIKASK.ttf") format("truetype");
 }
 
-#bubble-container {
+#about, #help {
+    display: none;
     position: absolute;
     width: 80%;
     max-width: 600px;
@@ -104,6 +105,7 @@ body {
     z-index: 2;
 }
 
+
 .bubble {
     position: absolute;
     font-family: "KomikaSlick", Arial, sans-serif;
@@ -113,19 +115,11 @@ body {
     border-radius: .4em;
 }
 
-#help {
-    display: none;
-}
-#help-inner {
+.bubble-inner {
     padding: 20px;
+    text-align: left;
 }
 
-#about {
-    display: none;
-}
-#about-inner {
-    padding: 20px;
-}
 
 /* Page Navigation */
 .navbtn {
