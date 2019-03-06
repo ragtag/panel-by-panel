@@ -27,15 +27,21 @@ In the top menu to the right is a link to a thumbnail overview of all your pages
 
 ## ACBF Support
 The ACBF format is quite feature rich, and panel-by-panel currently only supports a small subset of it's features. The supported tags are:
-* coverpage
-* page
+* body (including bgcolor attribute)
+* coverpage (including bgcolor attribute)
+* page (including bgcolor attribute)
 * image
 * frame
-* book-title (it will pick the first language it can find)
+* book-title
 * authors
 * annotation
+* genre
+* content-rating (includ type attribute)
+* publisher
+* publish-date
+* license
 
-It also supports the "bgcolor" attribute for "body", "coverpage" and "page" tags. This lets you choose which backround color to use for the comic or for each page.
+You can use the bgcolor attribute of the body, coverpage and page tags to which backround color to use for the comic or for each page.
 
 Note that the "frame" tag is supported on coverpages, but the official ACBF Editor cannot create these. For now, you can use Krita to make these, or edit the ACBF file by hand. The official ACBF Viewer does display these comics correctly.
 
@@ -54,6 +60,8 @@ At the top of the pbp/panelbypanel.js there are a few settings you can easily ch
 * menuDelay - how long to keep the top menu on the screen, after the page initally loads in milliseconds
 * pbpMaxWidth/Height - Switch to panel by panel mode by default when on a dislpay less than this width or height
 * htacess - see below
+
+Controlling what meta data to show in the about comic dialog should be relatviely straight forward if you're familiar with HTML, by simply editing the pbp.php.
 
 Note that the panel by panel reader is designed to be full screen, so currently doesn't support adding headers, footers, sidebars etc. Adding these to the thumbnails page would be pretty straight forward, but adding it to the reader itself would be a bit more involved.
 
