@@ -89,9 +89,60 @@ class PanelByPanel
         $summary = $this->in_lang($this->acbf->{'meta-data'}->{'book-info'}->{'annotation'});
         $retstring = '';
         foreach ($summary->p as $paragraph) {
-            $retstring .= '<p>'.$paragraph.'</p>';
+            $retstring .= '<p class="summary">'.$paragraph.'</p>';
         }
         return $retstring;
+    }
+
+    public function get_publisher() {
+        return $this->acbf->{'meta-data'}->{'publish-info'}->{'publisher'};
+    }
+
+    public function get_publish_date() {
+        return $this->acbf->{'meta-data'}->{'publish-info'}->{'publish-date'};
+    }
+
+    public function get_license()  {
+        if (isset($this->acbf->{'meta-data'}->{'publish-info'}->{'license'})) {
+            return $this->acbf->{'meta-data'}->{'publish-info'}->{'license'};
+        } else {
+            return "Copyright &copy; ".$this->get_date()." ".$this->get_publisher();
+        }
+    }
+
+    public function get_rating() {
+        $rating = $this->acbf->{'meta-data'}->{'book-info'}->{'content-rating'};
+        if (sizeof($rating) == 0) {
+            return "Not rated<br />";
+        } else {
+            $rating_html = '<span id="rating">';
+            foreach ($rating as $r) {
+                $attr = $r->attributes();
+                if (isset($attr['type'])) {
+                    $rating_html .= $attr['type']." - ".$r."<br />";
+                } else {
+                    $rating_html .= "Rated ".$r."<br />";
+                }
+            }
+            $rating_html .= "</span>";
+            return $rating_html;
+        }
+    }
+
+    public function get_genres() {
+        $genres = $this->acbf->{'meta-data'}->{'book-info'}->{'genre'};
+        $gary = array();
+        if (sizeof($genres) == 0) {
+            return false;
+        } else {
+            $genre_html = '<span id="genre">';
+            foreach ($genres as $g) {
+                array_push($gary, $g);
+            }
+            $genre_html .= implode($gary, ' &middot; ');
+            $genre_html .= "</span>";
+            return $genre_html;
+        }
     }
 
     public function get_bgcolor() {

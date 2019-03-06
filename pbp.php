@@ -43,9 +43,19 @@
 	  </a>
 	  <div id="about" class="bubble">
 	    <div id="about-inner" class="bubble-inner">
-	      <h3><?= $pbp->get_title() ?></h3>
+	      <div id="summary">
+	      <h3 id="title"><?= $pbp->get_title() ?></h3>
 	      <?= $pbp->get_summary() ?>
-	      <?= $pbp->get_authors() ?>
+	      </div>
+	      <div id="authors">
+		<?= $pbp->get_authors() ?>
+	      </div>
+	      <div id="publisher">
+		<strong>Genre</strong>: <?= $pbp->get_genres() ?><br />
+		<strong>Rating</strong>: <?= $pbp->get_rating() ?>
+		<strong>Publisher</strong>: <?= $pbp->get_publisher() ?> - <?= $pbp->get_publish_date() ?><br />
+		<strong>License</strong>: <?= $pbp->get_license() ?><br />
+	      </div>
 	    </div>
 	  </div>
 	  <a href="#" id="pbpbtn" class="button">
@@ -59,14 +69,14 @@
 	      <noscript>
 		<h3 style="color:red">JavaScrip Disabled!</h3>
 		<p>To get to full set of features from this reader, please enable JavaScript.</p>
-		<p>You can still navigate the comic by pressing the left or right third of your screen, but other features, such as reading panel by panel, won't work.</p>
+		<p>You can still navigate the comic by pressing the left or right third of your screen, but will miss out on features, such as panel by panel reading.</p>
 	      </noscript>
 	      <h3>Navigate the Comic</h3>
 	      <ul>
 		<li>Click the left or right third of your screen</li>
-		<li>Swipe left or right</li>
-		<li>Use the left or right arrow keys</li>
-		<li>Use Page Up or Down (always flips through pages)</li>
+		<li>Swipe left or right on a touch screen device</li>
+		<li>Use the space bar, or the left and right arrow keys</li>
+		<li>Use Page Up or Down keys (flips through pages)</li>
 	      </ul>
 	      <h3>Pages or Panels</h3>
 	      <ul>
