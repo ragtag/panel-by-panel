@@ -23,7 +23,11 @@ class PanelByPanel {
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
 	if (htaccess) {
-	    p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
+	    if(url.pathname.split('/').slice(1).length == 1) {
+		p = 0;
+	    } else {
+		p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
+	    }
 	}
 	if (!isNaN(p)) {
 	    this.comic.gotoPage(p);

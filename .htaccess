@@ -12,6 +12,7 @@ RewriteRule ^([A-Za-z0-9-_]+)/page-([0-9]+)/([A-Za-z]+)$ pbp.php?comic=$1&page=$
 RewriteRule ^([A-Za-z0-9-_]+)/page-([0-9]+)/([A-Za-z]+)/$ pbp.php?comic=$1&page=$2&lang=$3 [NC]
 RewriteRule ^([A-Za-z0-9-_]+)/page-([0-9]+).html$ pbp.php?comic=$1&page=$2 [NC]
 RewriteRule ^([A-Za-z0-9-_]+)/$ pbp.php?comic=$1&page=0 [NC]
+RewriteRule ^([A-Za-z0-9-_]+)$ pbp.php?comic=$1&page=0 [NC]
 # URL example.com/ComicBookName/thumb
 RewriteRule ^([A-Za-z0-9-_]+)/thumbs$ thumbs.php?comic=$1&page=0 [NC]
 RewriteRule ^([A-Za-z0-9-_]+)/thumbs/$ thumbs.php?comic=$1&page=0 [NC]
