@@ -106,7 +106,7 @@ class PanelByPanel
         if (isset($this->acbf->{'meta-data'}->{'publish-info'}->{'license'})) {
             return $this->acbf->{'meta-data'}->{'publish-info'}->{'license'};
         } else {
-            return "Copyright &copy; ".$this->get_date()." ".$this->get_publisher();
+            return "Copyright &copy; ".$this->get_publish_date()." ".$this->get_publisher();
         }
     }
 
