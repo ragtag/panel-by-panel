@@ -8,8 +8,6 @@ const menuDelay = 1500;
 const pbpMaxWidth = 800;
 // ...this height.
 const pbpMaxHeight = 1000;
-// Use htaccess mod rewrite
-const htaccess = false;
 // Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
 const debug = false;
 
@@ -22,13 +20,6 @@ class PanelByPanel {
 	// Go to specific page directly
 	let url = new URL(window.location.href);
 	let p = parseInt(url.searchParams.get("page"));
-	if (htaccess) {
-	    if(url.pathname.split('/').slice(1).length == 1) {
-		p = 0;
-	    } else {
-		p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
-	    }
-	}
 	if (!isNaN(p)) {
 	    this.comic.gotoPage(p);
 	}
@@ -43,9 +34,6 @@ class PanelByPanel {
 	window.addEventListener("popstate", function(e) {
 	    let url = new URL(window.location.href);
 	    let p = parseInt(url.searchParams.get("page"));
-	    if (htaccess) {
-		p = parseInt(url.pathname.split('/').slice(1)[1].replace( /^\D+/g, ''));
-	    }
 	    if (!isNaN(p)) {
 		self.comic.gotoPage(p);
 		self.artist.focus();
@@ -288,23 +276,11 @@ class Draw {
 
     flip() {
 	document.getElementById('page').src = "/comics/"+this.comic.pages[this.comic.currentPage].image;
-	if (htaccess) {
-	    document.getElementById('thumbsbtn').href = '/'+this.comic.name+'/thumbs/'+this.comic.currentPage;
-	} else {
-	    document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
-	}
+	document.getElementById('thumbsbtn').href = 'thumbs.php?comic='+this.comic.name+'&page='+this.comic.currentPage;
 	let prev = this.comic.currentPage - 1;
 	let next = this.comic.currentPage + 1;
-	if (htaccess) {
-	    document.getElementById('prevbtn').href = '/'+this.comic.name+'/page-'+prev;
-	} else {
-	    document.getElementById('prevbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+prev;
-	}
-	if (htaccess) {
-	    document.getElementById('nextbtn').href = '/'+this.comic.name+'/page-'+next;
-	} else {
-	    document.getElementById('nextbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+next;
-	}
+	document.getElementById('prevbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+prev;
+	document.getElementById('nextbtn').href = 'pbp.php?comic='+this.comic.name+'&page='+next;
 	this.setTitle();
 	this.setBackground();
 	this.preload();
@@ -366,11 +342,7 @@ class Draw {
     storeHistory() {
 	let p = this.comic.currentPage;
 	let url = new URL(window.location.href);
-	if (htaccess) {
-	    window.history.pushState("", "", "/"+this.comic.name+"/page-"+this.comic.currentPage);
-	} else {
-	    window.history.pushState("", "", url.pathname+'?comic=' + this.comic.name + "&page=" + p);
-	}
+	window.history.pushState("", "", url.pathname+'?comic=' + this.comic.name + "&page=" + p);
     }
 
     setBackground() {
@@ -476,20 +448,13 @@ class Comic {
 	// Get language, if set.
 	let url = new URL(window.location.href);
 	let l = url.searchParams.get("lang");
-	if (htaccess) {
-	    l = url.pathname.split('/').slice(1)[3];
-	}
 	if (l != undefined) {
 	    this.lang = l;
 	} else {
 	    this.lang = "en";
 	}
 
-	if (htaccess) {
-	    this.name  = url.pathname.split('/').slice(1)[0];
-	} else {
-	    this.name = url.searchParams.get('comic') || "comic";
-	}
+	this.name = url.searchParams.get('comic') || "comic";
 	this.url = "/comics/" + this.name + "/" + this.name + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
