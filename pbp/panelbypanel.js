@@ -369,7 +369,7 @@ class Draw {
 	if (htaccess) {
 	    window.history.pushState("", "", "/"+this.comic.name+"/page-"+this.comic.currentPage);
 	} else {
-	    window.history.pushState("", "", url.pathname+'?page=' + p + "&comic=" + this.comic.name);
+	    window.history.pushState("", "", url.pathname+'?comic=' + this.comic.name + "&page=" + p);
 	}
     }
 
