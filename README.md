@@ -8,9 +8,11 @@ Panel by panel online comics reader for artists wanting to make their webcomics 
 * Upload the code to a your web server.
 * Create a "comics" folder on your web server, and upload a folder containing your comic there.
 * The comic needs to be in the [ACBF format](https://acbf.fandom.com/wiki/Advanced_Comic_Book_Format_Wiki). Panel by Panel only support [ACBF files referencing external files](https://acbf.fandom.com/wiki/ACBF_Specifications), and not single ACBF files or .cbz ACBF files (see below for details).
-* Make sure your .acbf file has the same name as your folder (e.g. comics/AdventureStories/AdventureStories.acbf).
+* Make sure your .acbf file has the same name as your folder (e.g. comics/adventure-stories/adventure-stories.acbf). The name of the folder and the .acbf file MUST be lower case.
 * You can either use the official [ACBF Editor](https://acbf.fandom.com/wiki/ACBF_Editor), or [Krita's](https://krita.org) Comics Manaager to build ACBF files ([Krita Comics Manager docs](https://github.com/KDE/krita/tree/master/plugins/python/comics_project_management_tools)).
-* Go to http://your-site.com/pbp.php?comic=NameOfYourComic
+* Go to http://your-site.com/pbp.php?comic=adventure-stories
+
+Note that the URL is case insensitive, so Adventure-Stories, adventure-stories or AdVentuRe-StorIes all work.
 
 ## Reading Your Comic
 panel-by-panel is designed to make it easier to read comics on mobile devices. If you set up frames (panels) in your ACBF file, you can navigate the comic panel by panel. It also supports navigating page by page, and will try to guess which mode is most practical based on your screen size and resolution. You can manually toggle between the two modes by clicking the Panel by Panel icon in the top menu. You can bring up the top menu by either click the middle of the page or by moving your mouse pointer to the top of the page.

@@ -19,7 +19,7 @@ class PanelByPanel
         // Get comic and page
         $this->name = 'comic';
         if (isset($_GET['comic'])) {
-            $this->name = $_GET['comic'];
+            $this->name = strtolower($_GET['comic']);
         }
         $this->lang = 'en';
         if (isset($_GET['lang'])) {
