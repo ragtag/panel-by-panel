@@ -1,7 +1,7 @@
 # Panel by Panel
 Panel by panel online comics reader for artists wanting to make their webcomics more mobile friendly.
 
-You can see what it looks like with [these excellent comics](http://dev.queertales.com/index.php) from the [ACBF Comic Book Library](http://dev.queertales.com/index.php).
+You can see what it looks like with [these excellent comics](http://dev.ragtag.net/index.php) from the [ACBF Comic Book Library](http://acbf.info/).
 
 *Status* - The code is mostly feature complete, but still needs a bit more tweaking, plus testing on various devices. So far I've tested it in Chrome, Firefox, Edge, Safari, Chrome on Android and Safari on iPhone. If you find any bugs in the code, please [report them](https://github.com/ragtag/panel-by-panel/issues).
 
