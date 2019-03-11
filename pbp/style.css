@@ -90,7 +90,7 @@ body {
 /* About & Help */
 @font-face {
     font-family: "KomikaSlick";
-    src: url("fonts/KOMIKASK.ttf") format("truetype");
+    src: url("fonts/komikask.ttf") format("truetype");
 }
 
 #about, #help {
