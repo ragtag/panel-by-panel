@@ -9,7 +9,7 @@ const pbpMaxWidth = 800;
 // ...this height.
 const pbpMaxHeight = 1000;
 // Use htaccess mod rewrite
-const htaccess = true;
+const htaccess = false;
 // Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
 const debug = false;
 

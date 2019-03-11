@@ -86,7 +86,7 @@
 	  </div>
 	</div>
 	<div id="menu-right">
-	  <a href="/<?= $pbp->get_thumbs() ?>" id="thumbsbtn" alt="Show page overview">
+	  <a href="<?= $pbp->get_thumbs() ?>" id="thumbsbtn" alt="Show page overview">
 	    <img src="/pbp/images/pages.svg" />
 	  </a>
 	</div>

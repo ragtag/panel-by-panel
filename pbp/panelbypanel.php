@@ -33,6 +33,10 @@ class PanelByPanel
             $this->page = (int)preg_replace("/[^0-9]/", '', $_GET['page']);
         }
 
+        $this->url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $this->url = dirname($this->url);
+
+
         // Read Advanced Comic Book Format
         $acbf_string = file_get_contents('./comics/'.$this->name.'/'.$this->name.'.acbf');
         $this->acbf = new SimpleXMLElement($acbf_string);
@@ -192,7 +196,7 @@ class PanelByPanel
         if ($this->htaccess) {
             return $this->name."/thumbs/".$this->page;
         } else {
-            return "thumbs.php?comic=".$this->name."&page=".$this->page;
+            return $this->url."/thumbs.php?comic=".$this->name."&page=".$this->page;
         }
     }
 
@@ -228,9 +232,9 @@ class PanelByPanel
             if ($this->htaccess) {
                 $html .= "\t<a class='thumblink' href='/".$this->name."/page-".$i.".html'>\n";
             } else {
-                $html .= "\t<a class='thumblink' href='/pbp.php?comic=".$this->name."&page=".$i."'>\n";
+                $html .= "\t<a class='thumblink' href='".$this->url."/pbp.php?comic=".$this->name."&page=".$i."'>\n";
             }
-            $html .= "\t\t<img class='thumb' id='".$id."' src=/".$thumb." />\n";
+            $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->url.'/'.$thumb."' />\n";
             $html .= "\t</a>\n";
         }
         return $html;
