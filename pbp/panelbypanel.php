@@ -198,7 +198,7 @@ class PanelByPanel
 
         // Generate HTML
         $html = "";
-        for ($i = 0; $i < sizeof($this->acbf->body->page);$i++) {
+        for ($i = 0; $i < sizeof($this->acbf->body->page)+1;$i++) {
             if ($i == 0) {
                 $image = "comics/".$this->name."/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
                 $thumb = "comics/".$this->name."/thumbs/".$this->acbf->{'meta-data'}->{'book-info'}->coverpage->image['href'];
