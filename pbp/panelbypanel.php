@@ -26,16 +26,45 @@ class PanelByPanel
         if (isset($_GET['lang'])) {
             $this->lang = $_GET['lang'];
         }
-
         if (!isset($_GET['page'])) {
             $this->page = 0;
         } else {
             $this->page = (int)preg_replace("/[^0-9]/", '', $_GET['page']);
         }
 
+        // Find the base URL up to the parameters
+        // TODO! Support non mod_rewrites
+        $this->set_root();
+        
         // Read Advanced Comic Book Format
         $acbf_string = file_get_contents('./comics/'.$this->name.'/'.$this->name.'.acbf');
         $this->acbf = new SimpleXMLElement($acbf_string);
+    }
+
+    private function set_root() {
+        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $urlparts = explode('/', $url);
+        for ($i = 0; $i < sizeof($urlparts);$i++) {
+            switch ($i) {
+            case 0:
+                $this->root = $urlparts[$i];
+                break;
+            case 1:
+                $this->root .="//".$urlparts[$i];
+                break;
+            default:
+                if ($urlparts[$i] == $this->name) {
+                    break 2;
+                } else {
+                    $this->root .= "/".$urlparts[$i];
+                }
+                break;
+            }
+        }
+    }
+
+    public function get_root() {
+        return $this->root;
     }
 
     public function get_home() {
@@ -167,7 +196,7 @@ class PanelByPanel
             $next_page = "TODO! Exit";
         } else {
             if ($this->htaccess) {
-                $next_page = $this->name."/page-" . ($this->page + 1);
+                $next_page = $this->root."/".$this->name."/page-" . ($this->page + 1);
             } else {
                 $next_page = "pbp.php?comic=".$this->name."&page=" . ($this->page + 1);
             }
@@ -180,7 +209,7 @@ class PanelByPanel
             $prev_page = "TODO! Home";
         } else { 
             if ($this->htaccess) {
-                $prev_page = $this->name."/page-" . ($this->page - 1);
+                $prev_page = $this->root."/".$this->name."/page-" . ($this->page - 1);
             } else {
                 $prev_page = "pbp.php?comic=".$this->name."&page=" . ($this->page - 1);
             }
@@ -190,7 +219,7 @@ class PanelByPanel
 
     public function get_thumbs() {
         if ($this->htaccess) {
-            return $this->name."/thumbs/".$this->page;
+            return $this->root."/".$this->name."/thumbs/".$this->page;
         } else {
             return $this->root."/thumbs.php?comic=".$this->name."&page=".$this->page;
         }
