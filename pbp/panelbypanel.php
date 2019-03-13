@@ -15,6 +15,7 @@ class PanelByPanel
         $this->exitpage = $exitpage;
         $this->thumbMaxWidth = $thumbMaxWidth;
         $this->thumbMaxHeight = $thumbMaxHeight;
+        $this->htaccess = $htaccess;
         
         // Get comic and page
         $this->name = 'comic';
@@ -25,16 +26,44 @@ class PanelByPanel
         if (isset($_GET['lang'])) {
             $this->lang = $_GET['lang'];
         }
-
         if (!isset($_GET['page'])) {
             $this->page = 0;
         } else {
             $this->page = (int)preg_replace("/[^0-9]/", '', $_GET['page']);
         }
 
+        // Find the base URL up to the parameters
+        $this->set_root();
+        
         // Read Advanced Comic Book Format
         $acbf_string = file_get_contents('./comics/'.$this->name.'/'.$this->name.'.acbf');
         $this->acbf = new SimpleXMLElement($acbf_string);
+    }
+ 
+    private function set_root() {
+        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $delimiter = "pbp.php";
+        if (strpos($url, 'thumbs.php')) {
+            $delimiter = "thumbs.php";
+        }
+        if ($this->htaccess) {
+            $delimiter = $this->name;
+        }
+        $pattern = "/.+?(?=".$delimiter.")/";
+        $matches = preg_match($pattern, $url, $array);
+        $this->root = $array[0];
+    }
+
+    public function get_name() {
+        return $this->name;
+    }
+
+    public function get_root() {
+        return $this->root;
+    }
+
+    public function get_page() {
+        return $this->page;
     }
 
     public function get_home() {
@@ -165,7 +194,11 @@ class PanelByPanel
         if ($this->page >= sizeof($this->acbf->body->page)) {
             $next_page = "TODO! Exit";
         } else {
-            $next_page = "pbp.php?comic=".$this->name."&page=" . ($this->page + 1);
+            if ($this->htaccess) {
+                $next_page = $this->root."/".$this->name."/page-" . ($this->page + 1);
+            } else {
+                $next_page = "pbp.php?comic=".$this->name."&page=" . ($this->page + 1);
+            }
         }
         return $next_page;
     }
@@ -174,13 +207,21 @@ class PanelByPanel
         if ($this->page <= 0) {
             $prev_page = "TODO! Home";
         } else { 
-            $prev_page = "pbp.php?comic=".$this->name."&page=" . ($this->page - 1);
+            if ($this->htaccess) {
+                $prev_page = $this->root."/".$this->name."/page-" . ($this->page - 1);
+            } else {
+                $prev_page = "pbp.php?comic=".$this->name."&page=" . ($this->page - 1);
+            }
         }
         return $prev_page;
     }
 
     public function get_thumbs() {
-        return "thumbs.php?comic=".$this->name."&page=".$this->page;
+        if ($this->htaccess) {
+            return $this->root."/".$this->name."/thumbs/".$this->page;
+        } else {
+            return $this->root."/thumbs.php?comic=".$this->name."&page=".$this->page;
+        }
     }
 
     public function get_thumbs_bgcolor() {
@@ -212,8 +253,12 @@ class PanelByPanel
                 $id = "page-".$i;
             }
             $this->check_thumb($cwd."/".$image, $cwd."/".$thumb);
-            $html .= "\t<a class='thumblink' href='pbp.php?comic=".$this->name."&page=".$i."'>\n";
-            $html .= "\t\t<img class='thumb' id='".$id."' src='".$thumb."' />\n";
+            if ($this->htaccess) {
+                $html .= "\t<a class='thumblink' href='".$this->root.$this->name."/page-".$i."'>\n";
+            } else {
+                $html .= "\t<a class='thumblink' href='".$this->root."pbp.php?comic=".$this->name."&page=".$i."'>\n";
+            }
+            $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->root."/".$thumb."' />\n";
             $html .= "\t</a>\n";
         }
         return $html;
