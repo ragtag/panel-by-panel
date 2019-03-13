@@ -63,6 +63,10 @@ class PanelByPanel
         }
     }
 
+    public function get_name() {
+        return $this->name;
+    }
+
     public function get_root() {
         return $this->root;
     }

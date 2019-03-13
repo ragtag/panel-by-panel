@@ -485,12 +485,10 @@ class Comic {
 	    this.lang = "en";
 	}
 
-	if (htaccess) {
-	    this.name  = url.pathname.split('/').slice(1)[0];
-	} else {
-	    this.name = url.searchParams.get('comic') || "comic";
-	}
-	this.url = "/comics/" + this.name + "/" + this.name + ".acbf";
+	let pbpdata = document.getElementById('pbpdata').dataset;
+	this.name = pbpdata.name;
+	this.root = pbpdata.root;
+	this.url = pbpdata.root + "/comics/" + this.name + "/" + this.name + ".acbf";
 	this.currentPage = 0;
 	this.currentPanel = -1;
 	request.addEventListener("progress", this.updateProgress);

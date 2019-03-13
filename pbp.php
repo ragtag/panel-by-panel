@@ -29,7 +29,10 @@
     <script type="text/javascript" src="<?= $pbp->get_root() ?>/pbp/panelbypanel.js"></script>
   </head>
   <body bgcolor="<?= $pbp->get_bgcolor() ?>">
-
+    <div id="pbpdata"
+      data-root="<?= $pbp->get_root() ?>"
+      data-name="<?= $pbp->get_name() ?>"
+      </div>
     <div id="menuzone">
       <div id="menu">
 	<div id="menu-left">
