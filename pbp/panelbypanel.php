@@ -255,11 +255,11 @@ class PanelByPanel
             }
             $this->check_thumb($cwd."/".$image, $cwd."/".$thumb);
             if ($this->htaccess) {
-                $html .= "\t<a class='thumblink' href='/".$this->name."/page-".$i."'>\n";
+                $html .= "\t<a class='thumblink' href='".$this->root."/".$this->name."/page-".$i."'>\n";
             } else {
                 $html .= "\t<a class='thumblink' href='".$this->root."/pbp.php?comic=".$this->name."&page=".$i."'>\n";
             }
-            $html .= "\t\t<img class='thumb' id='".$id."' src='".$thumb."' />\n";
+            $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->root."/".$thumb."' />\n";
             $html .= "\t</a>\n";
         }
         return $html;
