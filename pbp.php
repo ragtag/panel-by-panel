@@ -32,6 +32,7 @@
     <div id="pbpdata"
       data-root="<?= $pbp->get_root() ?>"
       data-name="<?= $pbp->get_name() ?>"
+      data-page="<?= $pbp->get_page() ?>">
       </div>
     <div id="menuzone">
       <div id="menu">

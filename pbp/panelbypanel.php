@@ -33,34 +33,25 @@ class PanelByPanel
         }
 
         // Find the base URL up to the parameters
-        // TODO! Support non mod_rewrites
         $this->set_root();
         
         // Read Advanced Comic Book Format
         $acbf_string = file_get_contents('./comics/'.$this->name.'/'.$this->name.'.acbf');
         $this->acbf = new SimpleXMLElement($acbf_string);
     }
-
+ 
     private function set_root() {
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $urlparts = explode('/', $url);
-        for ($i = 0; $i < sizeof($urlparts);$i++) {
-            switch ($i) {
-            case 0:
-                $this->root = $urlparts[$i];
-                break;
-            case 1:
-                $this->root .="//".$urlparts[$i];
-                break;
-            default:
-                if ($urlparts[$i] == $this->name) {
-                    break 2;
-                } else {
-                    $this->root .= "/".$urlparts[$i];
-                }
-                break;
-            }
+        $delimiter = "pbp.php";
+        if (strpos($url, 'thumbs.php')) {
+            $delimiter = "thumbs.php";
         }
+        if ($this->htaccess) {
+            $delimiter = $this->name;
+        }
+        $pattern = "/.+?(?=".$delimiter.")/";
+        $matches = preg_match($pattern, $url, $array);
+        $this->root = $array[0];
     }
 
     public function get_name() {
@@ -69,6 +60,10 @@ class PanelByPanel
 
     public function get_root() {
         return $this->root;
+    }
+
+    public function get_page() {
+        return $this->page;
     }
 
     public function get_home() {
@@ -259,9 +254,9 @@ class PanelByPanel
             }
             $this->check_thumb($cwd."/".$image, $cwd."/".$thumb);
             if ($this->htaccess) {
-                $html .= "\t<a class='thumblink' href='".$this->root."/".$this->name."/page-".$i."'>\n";
+                $html .= "\t<a class='thumblink' href='".$this->root.$this->name."/page-".$i."'>\n";
             } else {
-                $html .= "\t<a class='thumblink' href='".$this->root."/pbp.php?comic=".$this->name."&page=".$i."'>\n";
+                $html .= "\t<a class='thumblink' href='".$this->root."pbp.php?comic=".$this->name."&page=".$i."'>\n";
             }
             $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->root."/".$thumb."' />\n";
             $html .= "\t</a>\n";

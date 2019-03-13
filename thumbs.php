@@ -23,8 +23,13 @@
     <noscript><link rel="stylesheet" href="<?= $pbp->get_root() ?>/pbp/noscript.css"></noscript>
   </head>
   <body bgcolor="<?= $pbp->get_thumbs_bgcolor($page, $acbf) ?>">
-  <div id="thumbs">
-    <?= $pbp->draw_thumbs() ?>
-  </div>
+    <div id="pbpdata"
+	 data-root="<?= $pbp->get_root() ?>"
+	 data-name="<?= $pbp->get_name() ?>"
+	 data-page="<?= $pbp->get_page() ?>">
+    </div>
+    <div id="thumbs">
+      <?= $pbp->draw_thumbs() ?>
+    </div>
 </body>
 </html>
