@@ -463,17 +463,8 @@ class Comic {
     constructor(request) {
 	this.homepage = document.getElementById('homebtn').href;
 	this.exitpage = document.getElementById('exitbtn').href;
-	// Get language, if set.
-	let url = new URL(window.location.href);
-	let l = url.searchParams.get("lang");
-	if (htaccess) {
-	    l = url.pathname.split('/').slice(1)[3];
-	}
-	if (l != undefined) {
-	    this.lang = l;
-	} else {
-	    this.lang = "en";
-	}
+	// Defaults to English. No language support 
+	this.lang = "en";
 
 	let pbpdata = document.getElementById('pbpdata').dataset;
 	this.name = pbpdata.name;

@@ -23,9 +23,6 @@ class PanelByPanel
             $this->name = strtolower($_GET['comic']);
         }
         $this->lang = 'en';
-        if (isset($_GET['lang'])) {
-            $this->lang = $_GET['lang'];
-        }
         if (!isset($_GET['page'])) {
             $this->page = 0;
         } else {
