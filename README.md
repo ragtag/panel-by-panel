@@ -3,6 +3,12 @@ Panel by panel online comics reader for artists wanting to make their webcomics 
 
 You can see what it looks like with [these excellent comics](http://dev.ragtag.net/index.php) from the [ACBF Comic Book Library](http://acbf.info/).
 
+## Features
+* Mobile friendly panel by panel reading
+* Pre-loading of pages making flipping page instant
+* Thumbnail overview of the entire comic
+* Touch screen swiping support
+
 *Status* - The code is mostly feature complete, but still needs a bit more tweaking, plus testing on various devices. So far I've tested it in Chrome, Firefox, Edge, Safari, Chrome on Android and Safari on iPhone. If you find any bugs in the code, please [report them](https://github.com/ragtag/panel-by-panel/issues).
 
 ## Getting Started
