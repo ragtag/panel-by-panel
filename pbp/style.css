@@ -4,6 +4,10 @@ body {
     /* Background color is controlled by the ACBF on a per comic and or page basis */
 }
 
+a {
+    outline: 0;
+}
+
 /* Layout */
 
 #navcontainer, #pagecontainer {
