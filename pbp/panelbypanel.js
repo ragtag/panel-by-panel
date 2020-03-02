@@ -77,16 +77,19 @@ class PanelByPanel {
 	    }
 	}
 	if (debug) {
-	    alert("Viewport\n\nWidth: " + this.artist.viewportWidth + "\nHeight: " + this.artist.viewportHeight + "\nUsing Panel by Panel mode: " + this.panelMode);
+	    console.log("Viewport Width: " + this.artist.viewportWidth);
+	    console.log("Viewport Height: " + this.artist.viewportHeight);
+	    console.log("Using Panel by Panel mode: " + this.panelMode);
 	}
 
-	// Map out the panels on this page
-	this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
-
-	// This re-focuses if the image was not loaded on the inital focus
+	self.artist.focus();
+	// Run after the image has loaded
 	document.getElementById('page').onload = function() {
+	    // Map out the panels on this page
+	    this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
+	    // This re-focuses if the image was not loaded on the inital focus
 	    self.artist.focus();
-	}
+	}.bind(this);
     }
 
     dont(event) {
@@ -395,6 +398,18 @@ class Draw {
 	} else {
 	    scale = this.viewportWidth / this.imageWidth() * 100 / this.panel.width;
 	}
+	if (scale == Infinity) {
+	    scale = 1
+	}
+	if (debug) {
+	    console.log("Panel Height: " + this.panel.height);
+	    console.log("Panel Width: " + this.panel.width);
+	    console.log("ViewP Height: " + this.viewportHeight);
+	    console.log("ViewP Width: " + this.viewportWidth);
+	    console.log("Image Height: " + this.imageHeight());
+	    console.log("Image Width: " + this.imageWidth());
+	    console.log("Scale: " + scale);
+	}
 
 	anime({
 	    targets: "#page",
@@ -489,7 +504,9 @@ class Comic {
     }
     
     transferComplete(event) {
-	console.log("The transfer is complete");
+	if (debug) {
+	    console.log("The transfer is complete");
+	}
     }
 	
     transferFailed(event) {
@@ -527,8 +544,10 @@ class Comic {
 	for (let p = 0; p < this.acbf.ACBF.body.page.length; p++) {
 	    this.pages.push(this.parsePage(this.acbf.ACBF.body.page[p]));
 	}
-	console.log(dom);
-	console.log(this);
+	if (debug) {
+	    console.log(dom);
+	    console.log(this);
+	}
     }
 
     parsePage(page) {
