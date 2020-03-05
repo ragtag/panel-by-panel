@@ -1,6 +1,6 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 class PanelByPanel
 {
@@ -82,6 +82,10 @@ class PanelByPanel
 
     public function get_title() {
         return $this->in_lang($this->acbf->{'meta-data'}->{'book-info'}->{'book-title'});
+    }
+
+    public function get_lang() {
+        return $this->lang;
     }
 
     public function get_page_of() {
@@ -189,7 +193,7 @@ class PanelByPanel
 
     public function get_next() {
         if ($this->page >= sizeof($this->acbf->body->page)) {
-            $next_page = "TODO! Exit";
+            $next_page = $this->exitpage;
         } else {
             if ($this->htaccess) {
                 $next_page = $this->root."/".$this->name."/page-" . ($this->page + 1);
@@ -202,7 +206,7 @@ class PanelByPanel
     
     public function get_prev() {
         if ($this->page <= 0) {
-            $prev_page = "TODO! Home";
+            $prev_page = $this->homepage;
         } else { 
             if ($this->htaccess) {
                 $prev_page = $this->root."/".$this->name."/page-" . ($this->page - 1);
@@ -255,7 +259,7 @@ class PanelByPanel
             } else {
                 $html .= "\t<a class='thumblink' href='".$this->root."pbp.php?comic=".$this->name."&page=".$i."'>\n";
             }
-            $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->root."/".$thumb."' />\n";
+            $html .= "\t\t<img class='thumb' id='".$id."' src='".$this->root."/".$thumb."' alt=\"".htmlentities($this->get_title(), ENT_QUOTES)." - page ".$i."\" />\n";
             $html .= "\t</a>\n";
         }
         return $html;

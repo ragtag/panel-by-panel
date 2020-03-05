@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<?php require "pbp/panelbypanel.php" ?>
+<html lang="<?= $pbp->get_lang() ?>">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <?php require "pbp/panelbypanel.php" ?>
     <link rel="apple-touch-icon" sizes="57x57" href="<?= $pbp->get_root() ?>/pbp/favicons/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="<?= $pbp->get_root() ?>/pbp/favicons/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="<?= $pbp->get_root() ?>/pbp/favicons/apple-icon-72x72.png">
@@ -18,17 +18,17 @@
     <link rel="icon" type="image/png" sizes="96x96" href="<?= $pbp->get_root() ?>/pbp/favicons/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="<?= $pbp->get_root() ?>/pbp/favicons/favicon-16x16.png">
     <link rel="manifest" href="<?= $pbp->get_root() ?>/pbp/favicons/manifest.json">
-
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="<?= $pbp->get_root() ?>/pbp/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+
     <title><?= $pbp->get_title() ?> - <?= $pbp->get_page_of() ?></title>
     <link rel="stylesheet" href="<?= $pbp->get_root() ?>/pbp/style.css">
     <noscript><link rel="stylesheet" href="<?= $pbp->get_root() ?>/pbp/noscript.css"></noscript>
-    <script type="text/javascript" src="<?= $pbp->get_root() ?>/animejs/anime.min.js"></script>
-    <script type="text/javascript" src="<?= $pbp->get_root() ?>/pbp/panelbypanel.js"></script>
+    <script src="<?= $pbp->get_root() ?>/animejs/anime.min.js"></script>
+    <script src="<?= $pbp->get_root() ?>/pbp/panelbypanel.js"></script>
   </head>
-  <body bgcolor="<?= $pbp->get_bgcolor() ?>">
+  <body id="comicpage" bgcolor="<?= $pbp->get_bgcolor() ?>">
     <div id="pbpdata"
       data-root="<?= $pbp->get_root() ?>"
       data-name="<?= $pbp->get_name() ?>"
@@ -38,13 +38,13 @@
       <div id="menu">
 	<div id="menu-left">
 	  <a href="<?= $pbp->get_home() ?>" id="homebtn">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/back.svg" />
+	    <img src="<?= $pbp->get_root() ?>/pbp/images/back.svg" alt="home" />
 	  </a>
 	  <a href="<?= $pbp->get_exit() ?>" id="exitbtn" style="display:none"></a>
 	</div>
 	<div id="menu-center">
 	  <a href="" id="aboutbtn" class="button">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/about.svg" alt="About this comic" />
+	    <img src="<?= $pbp->get_root() ?>/pbp/images/about.svg" alt="About" />
 	  </a>
 	  <div id="about" class="bubble">
 	    <div id="about-inner" class="bubble-inner">
@@ -91,8 +91,8 @@
 	  </div>
 	</div>
 	<div id="menu-right">
-	  <a href="<?= $pbp->get_thumbs() ?>" id="thumbsbtn" alt="Show page overview">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/pages.svg" />
+	  <a href="<?= $pbp->get_thumbs() ?>" id="thumbsbtn">
+	    <img src="<?= $pbp->get_root() ?>/pbp/images/pages.svg" alt="Thumbnail page overview" />
 	  </a>
 	</div>
       </div>
@@ -107,7 +107,8 @@
     <div id="pagecontainer">
       <img src="<?= $pbp->get_root() ?>/<?= $pbp->get_image() ?>"
 	   id="page"
-	   style="transform: translate(-50%, -50%);" />
+	   style="transform: translate(-50%, -50%);"
+       alt="Comics page" />
     </div>
 
   </body>
