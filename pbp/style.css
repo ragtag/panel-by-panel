@@ -1,7 +1,10 @@
 body {
     padding: 0;
     margin: 0;
-    /* Background color is controlled by the ACBF on a per comic and or page basis */
+    /* 
+       Background color is controlled by the ACBF on a per comic and or page basis.
+       To set the background here, set perPageColor in panelbypanel.js to false.
+   */
 }
 
 a {

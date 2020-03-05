@@ -8,11 +8,12 @@ const menuDelay = 1500;
 const pbpMaxWidth = 800;
 // ...this height.
 const pbpMaxHeight = 1000;
-// Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
-const debug = false;
+// Use per page background color. If not set you can control the background from the style sheet
+const perPageColor = true;
 // Use htaccess mod rewrite
 const htaccess = true;
-
+// Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
+const debug = false;
 
 class PanelByPanel {
     constructor(comic) {
@@ -299,7 +300,9 @@ class Draw {
 	    document.getElementById('nextbtn').href = this.comic.root+'pbp.php?comic='+this.comic.name+'&page='+next;
 	}
 	this.setTitle();
-	this.setBackground();
+	if (perPageColor) {
+	    this.setBackground();
+	}
 	this.preload();
     }
 
