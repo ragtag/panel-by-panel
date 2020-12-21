@@ -26,7 +26,6 @@ class PanelByPanel {
 	this.artist = new Draw(this.comic);
 	this.artist.storeHistory();
 	this.artist.focus();
-	this.artist.hideMenu(menuDelay);
 	let self = this;
 	window.onresize = function() { self.artist.focus() }
 	window.addEventListener("popstate", function(e) {
@@ -76,6 +75,13 @@ class PanelByPanel {
 	    } else {
 		this.setPanelMode(true);
 	    }
+	}
+	if ('firstVisit' in sessionStorage) {
+	    this.artist.hideMenu(menuDelay);
+	} else {
+	    this.artist.help()
+	    this.artist.help()
+	    sessionStorage.setItem("firstVisit", false);
 	}
 	if (debug) {
 	    console.log("Viewport Width: " + this.artist.viewportWidth);

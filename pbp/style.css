@@ -59,7 +59,7 @@ a {
     background: rgba(100, 100, 100, 0.7);
 }
 
-#menu img {
+.menu-icon {
     width: 48px;
     height: 48px;
     /* Change the color of the menu buttons (in a somewhat hacky way */
@@ -114,6 +114,16 @@ a {
     border-radius: 0.2em;
 }
 
+
+.icon-list {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.help-icon {
+    width: 32px;
+    vertical-align: middle;
+}
 
 .bubble {
     position: absolute;

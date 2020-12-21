@@ -38,13 +38,13 @@
       <div id="menu">
 	<div id="menu-left">
 	  <a href="<?= $pbp->get_home() ?>" id="homebtn">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/back.svg" alt="home" />
+	    <img class="menu-icon" src="<?= $pbp->get_root() ?>/pbp/images/back.svg" alt="home" />
 	  </a>
 	  <a href="<?= $pbp->get_exit() ?>" id="exitbtn" style="display:none"></a>
 	</div>
 	<div id="menu-center">
 	  <a href="" id="aboutbtn" class="button">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/about.svg" alt="About" />
+	    <img class="menu-icon" src="<?= $pbp->get_root() ?>/pbp/images/about.svg" alt="About" />
 	  </a>
 	  <div id="about" class="bubble">
 	    <div id="about-inner" class="bubble-inner">
@@ -64,10 +64,10 @@
 	    </div>
 	  </div>
 	  <a href="#" id="pbpbtn" class="button">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
+	    <img class="menu-icon" src="<?= $pbp->get_root() ?>/pbp/images/panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
 	  </a>
 	  <a href="" id="helpbtn" class="button">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/help.svg" alt="Help" />
+	    <img class="menu-icon" src="<?= $pbp->get_root() ?>/pbp/images/help.svg" alt="Help" />
 	  </a>
 	  <div id="help" class="bubble">
 	    <div id="help-inner" class="bubble-inner">
@@ -76,23 +76,42 @@
 		<p>To get to full set of features from this reader, please enable JavaScript.</p>
 		<p>You can still navigate the comic by pressing the left or right third of your screen, but will miss out on features, such as panel by panel reading.</p>
 	      </noscript>
-	      <h3>Navigate the Comic</h3>
+	      <h3>Navigation</h3>
 	      <ul>
 		<li>Click the left or right third of your screen</li>
 		<li>Swipe left or right on a touch screen device</li>
 		<li>Use the space bar, or the left and right arrow keys</li>
 		<li>Use Page Up or Down keys (flips through pages)</li>
 	      </ul>
-	      <h3>Pages or Panels</h3>
-	      <ul>
-		<li>Toggle panel by panel mode in the top menu</li>
+	      <h3>Menu</h3>
+	      <ul class="icon-list">
+		<li>
+		  <img class="help-icon" src="<?= $pbp->get_root() ?>/pbp/images/black-back.svg" alt="About" />
+		  Go home
+		</li>
+		<li>
+		  <img class="help-icon" src="<?= $pbp->get_root() ?>/pbp/images/black-about.svg" alt="About" />
+		  About this comic
+		</li>
+		<li>
+		  <img class="help-icon" src="<?= $pbp->get_root() ?>/pbp/images/black-panel-by-panel.svg" alt="Toggle Panel by Panel navigation" />
+		  Panel by Panel mode
+		</li>
+		<li>
+		  <img class="help-icon" src="<?= $pbp->get_root() ?>/pbp/images/black-help.svg" alt="Help" />
+		  Display this help
+		</li>
+		<li>
+		  <img class="help-icon" src="<?= $pbp->get_root() ?>/pbp/images/black-pages.svg" alt="Help" />
+		  Page overview
+		</li>
 	      </ul>
 	    </div>
 	  </div>
 	</div>
 	<div id="menu-right">
 	  <a href="<?= $pbp->get_thumbs() ?>" id="thumbsbtn">
-	    <img src="<?= $pbp->get_root() ?>/pbp/images/pages.svg" alt="Thumbnail page overview" />
+	    <img class="menu-icon" src="<?= $pbp->get_root() ?>/pbp/images/pages.svg" alt="Thumbnail page overview" />
 	  </a>
 	</div>
       </div>
