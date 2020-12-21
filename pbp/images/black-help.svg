@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg924"
+   version="1.1"
+   viewBox="0 0 16.933333 16.933334"
+   height="64"
+   width="64">
+  <defs
+     id="defs918" />
+  <metadata
+     id="metadata921">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path
+     style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000004;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 32 8.2578125 A 23.742731 23.742729 0 0 0 8.2578125 32 A 23.742731 23.742729 0 0 0 32 55.742188 A 23.742731 23.742729 0 0 0 55.742188 32 A 23.742731 23.742729 0 0 0 32 8.2578125 z M 32 11.777344 A 20.222116 20.222114 0 0 1 52.222656 32 A 20.222116 20.222114 0 0 1 32 52.222656 A 20.222116 20.222114 0 0 1 11.777344 32 A 20.222116 20.222114 0 0 1 32 11.777344 z "
+     transform="scale(0.26458334)"
+     id="path5168" />
+  <g
+     id="layer1" />
+  <path
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.08474268;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="m 7.8839884,10.23198 c 0,0 -10e-8,0.0834 0.03022,-0.8500632 C 7.9319594,8.392445 9.7937236,7.4012864 9.8011406,6.5377911 9.8074805,5.799689 9.4944307,5.4697347 8.8939905,5.2792949 7.8890996,4.9605769 7.2902165,5.888459 7.0730977,6.7085759 6.925826,6.8871526 5.8394516,6.1357509 5.7900366,5.9183896 6.2574114,4.9655425 7.2856514,3.9036367 8.9737475,4.1819453 10.015858,4.3537533 10.824806,5.1132378 10.89876,6.3763765 10.979129,7.7491081 9.1936835,8.7486332 9.04303,9.3727698 8.8923764,9.9969065 8.9987245,10.23198 8.9987245,10.23198 Z"
+     id="path5156" />
+  <circle
+     r="0.79374999"
+     style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.10340416;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path5158"
+     cx="8.4666672"
+     cy="12.002087" />
+</svg>
