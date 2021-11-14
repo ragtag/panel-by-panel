@@ -96,6 +96,9 @@ class PanelByPanel {
 	    this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
 	    // This re-focuses if the image was not loaded on the inital focus
 	    self.artist.focus();
+	    this.ready = true
+	    document.getElementById('loadingcontainer').style.display = 'none'
+	    this.artist.preload()
 	}.bind(this);
     }
 
@@ -104,33 +107,45 @@ class PanelByPanel {
     }
 
     next() {
-	if (this.panelMode) {
-	    let page = this.comic.currentPage;
-	    this.comic.next();
-	    if (page != this.comic.currentPage) {
+	if (this.ready) {
+	    if (this.panelMode) {
+		let page = this.comic.currentPage;
+		this.comic.next();
+		if (page != this.comic.currentPage) {
+		    document.getElementById('loadingcontainer').style.display = 'flex'
+		    this.artist.storeHistory();
+		    this.ready = false
+		}
+	    } else {
+		document.getElementById('loadingcontainer').style.display = 'flex'
+		this.comic.gotoPage(this.comic.currentPage + 1);
 		this.artist.storeHistory();
+		this.ready = false
 	    }
-	} else {
-	    this.comic.gotoPage(this.comic.currentPage + 1);
-	    this.artist.storeHistory();
+	    this.artist.hideMenu();
+	    this.artist.focus();
 	}
-	this.artist.hideMenu();
-	this.artist.focus();
     }
 
     prev() {
-	if (this.panelMode) {
-	    let page = this.comic.currentPage;
-	    this.comic.prev();
-	    if (page != this.comic.currentPage) {
+	if (this.ready) {
+	    if (this.panelMode) {
+		let page = this.comic.currentPage;
+		this.comic.prev();
+		if (page != this.comic.currentPage) {
+		    document.getElementById('loadingcontainer').style.display = 'flex'
+		    this.artist.storeHistory();
+		    this.ready = false
+		}
+	    } else {
+		    document.getElementById('loadingcontainer').style.display = 'flex'
+		this.comic.gotoPage(this.comic.currentPage - 1);
 		this.artist.storeHistory();
+		this.ready = false
 	    }
-	} else {
-	    this.comic.gotoPage(this.comic.currentPage - 1);
-	    this.artist.storeHistory();
+	    this.artist.hideMenu();
+	    this.artist.focus();
 	}
-	this.artist.hideMenu();
-	this.artist.focus();
     }
 
     menu() {
@@ -309,7 +324,7 @@ class Draw {
 	if (perPageColor) {
 	    this.setBackground();
 	}
-	this.preload();
+	// this.preload();
     }
 
     preload() {
