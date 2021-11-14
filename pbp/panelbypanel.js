@@ -10,6 +10,9 @@ const pbpMaxWidth = 800;
 const pbpMaxHeight = 1000;
 // Use per page background color. If not set you can control the background from the style sheet
 const perPageColor = true;
+// Preload the next or previous page or both. Preloading both is going to take longer on a slow connection.
+const preloadprev = true
+const preloadnext = true
 // Use htaccess mod rewrite
 const htaccess = true;
 // Pops up alerts with viewport height and width, to help debug pbpMaxWidth and Height
@@ -100,6 +103,7 @@ class PanelByPanel {
 	    document.getElementById('loadingcontainer').style.display = 'none'
 	    this.artist.preload()
 	}.bind(this);
+	this.ready = true
     }
 
     dont(event) {
@@ -302,7 +306,14 @@ class Draw {
     }
 
     flip() {
-	document.getElementById('page').src = this.comic.root+"comics/"+this.comic.pages[this.comic.currentPage].image;
+	if (document.getElementById('page').src != this.comic.root+"/comics/"+this.comic.pages[this.comic.currentPage].image) {
+	    document.getElementById('page').src = this.comic.root+"comics/"+this.comic.pages[this.comic.currentPage].image;
+	} else {
+	    this.drawnPage = this.comic.currentPage
+	    this.focus()
+	    document.getElementById('loadingcontainer').style.display = 'none'
+	    this.preload()
+	}
 	if (htaccess) {
 	    document.getElementById('thumbsbtn').href = this.comic.root+this.comic.name+'/thumbs/'+this.comic.currentPage;
 	} else {
@@ -324,11 +335,11 @@ class Draw {
 	if (perPageColor) {
 	    this.setBackground();
 	}
-	// this.preload();
     }
 
     preload() {
-	if (this.comic.currentPage < this.comic.pages.length - 1) {
+	if (this.comic.currentPage < this.comic.pages.length - 1 &&
+	    preloadnext == true) {
 	    let nextimg = new Image();
 	    let self = this;
 	    nextimg.onload = function() {
@@ -337,7 +348,7 @@ class Draw {
 	    };
 	    nextimg.src = this.comic.root+"comics/"+this.comic.pages[this.comic.currentPage + 1].image;
 	}
-	if (this.comic.currentPage > 0) {
+	if (this.comic.currentPage > 0 && preloadprev == true) {
 	    let previmg = new Image();
 	    let self = this;
 	    previmg.onload = function() {

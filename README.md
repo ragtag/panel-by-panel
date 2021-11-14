@@ -71,7 +71,9 @@ At the top of the pbp/panelbypanel.js there are a few settings you can easily ch
 * menuDelay - how long to keep the top menu on the screen, after the page initally loads in milliseconds
 * pbpMaxWidth/Height - switch to panel by panel mode by default when on a dislpay less than this width or height. Note that these numbers are not exact pixels, as high dpi devices add a scaling factor to complicate things a bit. Setting these to a value that fits your comics may require some experimenting.
 * perPageColor - use the background color for each page defined in the ACBF file. If set to false, it uses the background defined in the style sheet.
+* preloadnext/prev - if to preload the next or previous page. By default it will preload both.
 * htaccess - see below
+
 * debug - print out extra debug information to the console
 
 Changing what meta data to show in the about comic dialog should be relatviely straight forward if you're familiar with HTML, by simply editing the pbp.php.
