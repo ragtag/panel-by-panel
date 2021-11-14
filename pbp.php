@@ -123,9 +123,13 @@
     </div>
 
     <div id="navcontainer">
-      <a href="<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn"></a>
+      <a href="<?= $pbp->get_prev() ?>" class="navbtn" id="prevbtn">
+      	<img class="navarrow" src="<? $pbp->get_root() ?>/pbp/images/prev.svg" alt="Next" />
+      </a>
       <a href="#" class="navbtn" id="menubtn"></a>
-      <a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn"></a>
+      <a href="<?= $pbp->get_next() ?>" class="navbtn" id="nextbtn">
+	<img class="navarrow" src="<? $pbp->get_root() ?>/pbp/images/next.svg" alt="Next" />
+      </a>
     </div>
 
     <div id="pagecontainer">

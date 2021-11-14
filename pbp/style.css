@@ -42,19 +42,19 @@ a {
 }
 
 #loadingcontainer {
-    z-index: 10;
+    z-index: 4;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: gray;
+    background: black;
     opacity: 0.5;
     animation: fadein ease-in-out 1s;
 }
 
 #loadinganim {
     opacity: 1;
-    width: 30%;
-    animation: fadein ease-in-out 1500ms, scale 3600ms ease-in-out infinite;
+    width: 25%;
+    animation: fadein ease-in-out 1500ms, spin 3600ms ease-in-out infinite;
 }
 
 @keyframes fadein {
@@ -65,12 +65,12 @@ a {
 	opacity: 0.5;
     }
 }
-@keyframes scale {
-    0% { transform: scale(1.2) rotate(0deg) }
-    25% { transform: scale(1.1) rotate(90deg) }
-    50% { transform: scale(1) rotate(180deg) }
-    75% { transform: scale(1.1) rotate(270deg) }
-    100% { transform: scale(1.2) rotate(360deg) }
+@keyframes spin {
+    0% { transform: rotate(0deg) }
+    25% { transform: rotate(90deg) }
+    50% { transform: rotate(180deg) }
+    75% { transform: rotate(270deg) }
+    100% { transform: rotate(360deg) }
 }
 
 .helper {
@@ -193,14 +193,21 @@ a {
 
 /* Page Navigation */
 .navbtn {
+    display: flex;
+    align-content: center;
     height: 100%;
     width: 35%;
     float: left;
-    opacity: 0.2;
+    opacity: 0.5;
     border: 0;
-}    
+}
 
 #prevbtn {
+    justify-content: flex-start;
+}
+
+#prevbtn:hover > .navarrow {
+    display: block;
 }
 
 #menubtn {
@@ -208,6 +215,16 @@ a {
 }
 
 #nextbtn {
+    justify-content: flex-end;
+}
+
+#nextbtn:hover > .navarrow {
+    display: block;
+}
+
+.navarrow {
+    display: none;
+    width: 48px;
 }
 
 /* Thumbnails */

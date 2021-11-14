@@ -98,6 +98,7 @@ class PanelByPanel {
 	    self.artist.focus();
 	    this.ready = true
 	    document.getElementById('loadingcontainer').style.display = 'none'
+	    this.artist.preload()
 	}.bind(this);
     }
 
@@ -323,7 +324,7 @@ class Draw {
 	if (perPageColor) {
 	    this.setBackground();
 	}
-	this.preload();
+	// this.preload();
     }
 
     preload() {
