@@ -29,6 +29,11 @@
     <script src="<?= $pbp->get_root() ?>/pbp/panelbypanel.js"></script>
   </head>
   <body id="comicpage" bgcolor="<?= $pbp->get_bgcolor() ?>">
+
+    <div id="loadingcontainer">
+	<img id="loadinganim" src="<?= $pbp->get_root() ?>/pbp/images/panel-by-panel.svg" alt="About" />
+    </div>
+
     <div id="pbpdata"
       data-root="<?= $pbp->get_root() ?>"
       data-name="<?= $pbp->get_name() ?>"
