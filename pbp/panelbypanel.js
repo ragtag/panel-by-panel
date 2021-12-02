@@ -3,7 +3,7 @@
 // Animation speed when moving from panel to panel in milliseconds
 const speed = 750;  
 // How long to keep the menu on screen after the page initally loads in milliseconds
-const menuDelay = 1500;
+const menuDelay = 2000;
 // Switch to panel by panel mode by default, when on a dislpay less than this width or...
 const pbpMaxWidth = 800;
 // ...this height.
@@ -21,9 +21,6 @@ const debug = false;
 class PanelByPanel {
     constructor(comic) {
 	this.comic = comic;
-
-	// Go to specific page directly
-	this.comic.gotoPage(this.comic.currentPage);
 
 	// Draw the page
 	this.artist = new Draw(this.comic);
@@ -82,8 +79,6 @@ class PanelByPanel {
 	if ('firstVisit' in sessionStorage) {
 	    this.artist.hideMenu(menuDelay);
 	} else {
-	    this.artist.help()
-	    this.artist.help()
 	    sessionStorage.setItem("firstVisit", false);
 	}
 	if (debug) {
@@ -103,6 +98,7 @@ class PanelByPanel {
 	    document.getElementById('loadingcontainer').style.display = 'none'
 	    this.artist.preload()
 	}.bind(this);
+	this.artist.pointsToPercent(document.getElementById('page'), this.comic.currentPage);
 	this.ready = true
     }
 
