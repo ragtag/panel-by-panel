@@ -168,7 +168,7 @@ class PanelByPanel
             foreach ($genres as $g) {
                 array_push($gary, $g);
             }
-            $genre_html .= implode($gary, ' &middot; ');
+            $genre_html .= implode(' &middot; ', $gary);
             $genre_html .= "</span>";
             return $genre_html;
         }
@@ -196,7 +196,7 @@ class PanelByPanel
             $next_page = $this->exitpage;
         } else {
             if ($this->htaccess) {
-                $next_page = $this->root."/".$this->name."/page-" . ($this->page + 1);
+                $next_page = $this->root."".$this->name."/page-" . ($this->page + 1);
             } else {
                 $next_page = "pbp.php?comic=".$this->name."&page=" . ($this->page + 1);
             }
@@ -209,7 +209,7 @@ class PanelByPanel
             $prev_page = $this->homepage;
         } else { 
             if ($this->htaccess) {
-                $prev_page = $this->root."/".$this->name."/page-" . ($this->page - 1);
+                $prev_page = $this->root."".$this->name."/page-" . ($this->page - 1);
             } else {
                 $prev_page = "pbp.php?comic=".$this->name."&page=" . ($this->page - 1);
             }

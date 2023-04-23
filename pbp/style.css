@@ -43,7 +43,7 @@ a {
 
 #loadingcontainer {
     z-index: 4;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     background: black;

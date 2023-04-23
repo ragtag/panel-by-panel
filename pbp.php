@@ -33,7 +33,9 @@
     <div id="loadingcontainer">
 	<img id="loadinganim" src="<?= $pbp->get_root() ?>/pbp/images/panel-by-panel.svg" alt="About" />
     </div>
-
+    <script>
+      document.getElementById('loadingcontainer').style.display = 'flex'
+    </script>
     <div id="pbpdata"
       data-root="<?= $pbp->get_root() ?>"
       data-name="<?= $pbp->get_name() ?>"
