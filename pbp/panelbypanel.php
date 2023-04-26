@@ -39,6 +39,7 @@ class PanelByPanel
  
     private function set_root() {
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $url = strtolower($url);
         $delimiter = "pbp.php";
         if (strpos($url, 'thumbs.php')) {
             $delimiter = "thumbs.php";
